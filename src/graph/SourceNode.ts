@@ -17,6 +17,7 @@
 import { IHGraph } from "./IHGraph";
 import { EdgeReceiver, TransformationEdge } from "./TransformationEdge";
 
+export type SourceNodeContent = string;
 export class SourceNode implements EdgeReceiver {
     protected parent : IHGraph;
     protected id : string;

@@ -15,3 +15,7 @@
  ********************************************************************************/
 
 export * from './graph/IHGraph';
+export * from './graph/EdgeType';
+export * from './graph/SourceNode';
+export * from './graph/TransformationEdge';
+export * from './graph/IHFactory';
