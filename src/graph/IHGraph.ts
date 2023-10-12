@@ -20,7 +20,11 @@ import { EdgeReceiver, TransformationEdge } from "./TransformationEdge";
 
 export type IHNode = SourceNode | IHGraph;
 
-export class IHGraph implements EdgeReceiver {
+export interface NamedElement {
+    getId(): String | undefined;
+}
+
+export class IHGraph implements EdgeReceiver, NamedElement {
     protected parent: IHGraph | undefined;
     protected nodes: IHNode[] = [];
     protected edges: TransformationEdge[] = [];
@@ -30,6 +34,10 @@ export class IHGraph implements EdgeReceiver {
 
     constructor(parent: IHGraph | undefined = undefined) {
         this.parent = parent;
+    }
+
+    public getId(): string | undefined {
+        return undefined;
     }
 
     public getParent(): IHGraph | undefined {
@@ -150,6 +158,10 @@ export class IHGraph implements EdgeReceiver {
         return this.edges;
     }
 
+    public getSourceNodeEdges(): TransformationEdge[] {
+        return this.edges.filter((edge) => edge.getSourceNode() instanceof SourceNode && edge.getTargetNode() instanceof SourceNode);
+    }
+
     public getEdgeTypes(): EdgeType[] {
         return this.edgeTypes;
     }
@@ -268,5 +280,74 @@ export class IHGraph implements EdgeReceiver {
         const edgeType = edges.filter((val) => val.getType().getPriority() === prio)[0].getType();
 
         return this.getClique(node, edgeType);
+    }
+
+    public removeClique(clique: IHGraph): void {
+        // Remove all nodes and edges from the graph that are in the clique
+        const cliqueNodes = clique.getDeepNodes();
+        const cliqueEdges = clique.getDeepEdges();
+
+        cliqueNodes.forEach((val) => {
+            const index = this.nodes.indexOf(val);
+            if (index > -1) {
+                this.nodes.splice(index, 1);
+            }
+        });
+
+        cliqueEdges.forEach((val) => {
+            const index = this.edges.indexOf(val);
+            if (index > -1) {
+                this.edges.splice(index, 1);
+            }
+        });
+    }
+
+    public addClique(clique: IHGraph): void {
+        // Add all nodes and edges from the clique to the graph
+        const cliqueNodes = clique.getDeepNodes();
+        const cliqueEdges = clique.getDeepEdges();
+
+        cliqueNodes.forEach((val) => {
+            this.nodes.push(val);
+        });
+
+        const edgeTypeMap = new Map<EdgeType, EdgeType>();
+        clique.getEdgeTypes().forEach((val) => {
+            const edgeType = this.getEdgeTypeById(val.getId());
+            if (edgeType == undefined) {
+                const newEdgeType = this.createEdgeType(val.getId(), val.getPriority());
+                edgeTypeMap.set(val, newEdgeType);
+            } else {
+                edgeTypeMap.set(val, edgeType);
+            }
+        });
+
+        cliqueEdges.forEach((val) => {
+            val.setType(edgeTypeMap.get(val.getType())!);
+            this.edges.push(val);
+        });
+    }
+
+
+
+    public replaceClique(clique: IHGraph, replacement: IHGraph): void {
+        // Replace the old clique by a new one and re-route all edges from outside the clique to the new one.
+        // If the new clique only contains one node, all edges will be re-routed to the node.
+        // Otherwise, they will lead to the first node.
+
+        const cliqueNodes = clique.getDeepNodes();
+        const externalSourceEdges = cliqueNodes.map((node) => node.getIncomingEdges())
+            .flat()
+            .filter((val) => !cliqueNodes.includes(val.getSourceNode()));
+        const externalTargetEdges = cliqueNodes.map((node) => node.getOutgoingEdges())
+            .flat()
+            .filter((val) => !cliqueNodes.includes(val.getTargetNode()));
+
+        this.removeClique(clique);
+        this.addClique(replacement);
+        const primaryNode = replacement.nodes[0];
+
+        externalSourceEdges.forEach((val) => { val.setTargetNode(primaryNode); });
+        externalTargetEdges.forEach((val) => { val.setSourceNode(primaryNode); });
     }
 }

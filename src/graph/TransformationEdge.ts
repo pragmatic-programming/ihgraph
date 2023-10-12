@@ -55,4 +55,16 @@ export class TransformationEdge {
     public getType(): EdgeType {    
         return this.type;
     }
+
+    public setSourceNode(sourceNode: IHNode): void {
+        this.sourceNode = sourceNode;
+    }
+
+    public setTargetNode(targetNode: IHNode): void {
+        this.targetNode = targetNode;
+    }
+
+    public setType(type: EdgeType): void {
+        this.type = type;
+    }
 }

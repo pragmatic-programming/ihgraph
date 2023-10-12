@@ -14,11 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { IHGraph } from "./IHGraph";
+import { IHGraph, NamedElement } from "./IHGraph";
 import { EdgeReceiver, TransformationEdge } from "./TransformationEdge";
 
 export type SourceNodeContent = string;
-export class SourceNode implements EdgeReceiver {
+export class SourceNode implements EdgeReceiver, NamedElement {
     protected parent : IHGraph;
     protected id : string;
     protected content : string = "";
