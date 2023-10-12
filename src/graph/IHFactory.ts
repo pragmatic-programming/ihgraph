@@ -22,7 +22,10 @@ export function createTHGraphFromJSON(json: string) {
 
     // create nodes
     for (const node of parsedJSON.nodes) {
-        thGraph.createSourceNode(node.id);
+        const newNode = thGraph.createSourceNode(node.id);
+        if (node.content) {
+            newNode.setContent(node.content);
+        }
     }
 
     // create edge types

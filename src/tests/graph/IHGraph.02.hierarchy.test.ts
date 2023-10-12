@@ -72,6 +72,7 @@ test("checkTHGraphHierarchyPriority", () => {
     const type12 = thGraph.createEdgeType("Type12", 12);
 
     expect(thGraph.getNodes()[0]).toBeInstanceOf(IHGraph);
+
     thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!);
     thGraph.createTransformationEdge(type12, node1, thGraph.getNodes()[0]!);
 
@@ -84,7 +85,7 @@ test("checkTHGraphHierarchyCloneSizes", () => {
     const thGraph = testGraphHierarchy();
 
     // when
-    const clone = thGraph.clone()[0];
+    const clone = thGraph.clone();
     const nestedGraph = clone.getNodes()[0] as IHGraph;
 
     // then
@@ -103,7 +104,7 @@ test("checkTHGraphSimpleCloneReferences", () => {
     const node1 = thGraph.createSourceNode("Node1");
     const type2 = thGraph.createEdgeType("Type", 2);
     const edge = thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!); 
-    const clone = thGraph.clone()[0];
+    const clone = thGraph.clone();
     const nestedCloneGraph = clone.getNodes()[0] as IHGraph;
 
     // then
@@ -139,7 +140,7 @@ test("checkTHGraphSimpleCloneComplete", () => {
     const node1 = thGraph.createSourceNode("Node1");
     const type2 = thGraph.createEdgeType("Type2", 2);
     const edge = thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!); 
-    const [clone, nodeMapping, edgeMapping, typeMapping] = thGraph.clone();
+    const [clone, nodeMapping, edgeMapping, typeMapping] = thGraph.cloneWithMappings();
     const nestedCloneGraph = clone.getNodes()[0] as IHGraph;
 
     // then

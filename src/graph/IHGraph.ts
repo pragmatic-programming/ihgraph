@@ -14,6 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+import * as kico from "kico";
 import { EdgeType } from "./EdgeType";
 import { SourceNode } from "./SourceNode";
 import { EdgeReceiver, TransformationEdge } from "./TransformationEdge";
@@ -24,7 +25,7 @@ export interface NamedElement {
     getId(): String | undefined;
 }
 
-export class IHGraph implements EdgeReceiver, NamedElement {
+export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
     protected parent: IHGraph | undefined;
     protected nodes: IHNode[] = [];
     protected edges: TransformationEdge[] = [];
@@ -65,7 +66,15 @@ export class IHGraph implements EdgeReceiver, NamedElement {
         return edgeType;
     }
 
-    public clone(): [IHGraph, Map<IHNode, IHNode>, Map<TransformationEdge, TransformationEdge>, Map<EdgeType, EdgeType>] {
+    public isMutable(): boolean {
+        return true;    
+    }
+
+    public clone(): IHGraph {
+        return this.cloneWithMappings()[0];
+    } 
+
+    public cloneWithMappings(): [IHGraph, Map<IHNode, IHNode>, Map<TransformationEdge, TransformationEdge>, Map<EdgeType, EdgeType>] {
         const clone: IHGraph = new IHGraph();
     
         const nodeMapping = new Map<IHNode, IHNode>();
@@ -78,7 +87,7 @@ export class IHGraph implements EdgeReceiver, NamedElement {
                 nodeClone.setContent(node.getContent());
                 nodeMapping.set(node, nodeClone);
             } else {
-                const nodeClone = node.clone();
+                const nodeClone = node.cloneWithMappings();
                 clone.addNode(nodeClone[0]);
                 nodeMapping.set(node, nodeClone[0]);
                 nodeClone[1].forEach((val, key) => nodeMapping.set(key, val));

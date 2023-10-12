@@ -91,7 +91,7 @@ test("checkTHGraphSimpleCloneSizes", () => {
     const thGraph = testGraphSimple();
 
     // when
-    const clone = thGraph.clone()[0];
+    const clone = thGraph.clone();
 
     // then
     expect(clone.getNodes().length).toBe(2);
@@ -104,7 +104,7 @@ test("checkTHGraphSimpleCloneReferences", () => {
     const thGraph = testGraphSimple();
 
     // when
-    const clone = thGraph.clone()[0];
+    const clone = thGraph.clone();
 
     // then
     thGraph.getNodes().forEach((node, index) => {
@@ -123,7 +123,7 @@ test("checkTHGraphSimpleCloneComplete", () => {
     const thGraph = testGraphSimple();
 
     // when
-    const clone = thGraph.clone()[0];
+    const clone = thGraph.clone();
 
     const cloneNode1 = clone.getNodeById("Node1");
     const cloneNode2 = clone.getNodeById("Node2");
