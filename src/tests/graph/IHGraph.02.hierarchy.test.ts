@@ -16,7 +16,6 @@
 
 import exp = require("constants");
 import { IHGraph } from "../../graph/IHGraph";
-import { Console } from "console";
 
 function testGraphHierarchy(): IHGraph {
     const nestedGraph = new IHGraph();

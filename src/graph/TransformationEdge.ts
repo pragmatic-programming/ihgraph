@@ -17,13 +17,6 @@
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
 
-export interface EdgeReceiver {
-    getOutgoingEdges(): TransformationEdge[];
-    getIncomingEdges(): TransformationEdge[];
-    addOutgoingEdge(edge: TransformationEdge): void;
-    addIncomingEdge(edge: TransformationEdge): void;
-}
-
 export class TransformationEdge {
     protected parent : IHNode;
     protected sourceNode: IHNode;

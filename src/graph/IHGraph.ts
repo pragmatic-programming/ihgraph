@@ -15,19 +15,13 @@
  ********************************************************************************/
 
 import * as kico from "kico";
+import { EdgeReceiver } from "./EdgeReceiver";
 import { EdgeType } from "./EdgeType";
+import { NamedElement, getIds } from "./NamedElement";
 import { SourceNode } from "./SourceNode";
-import { EdgeReceiver, TransformationEdge } from "./TransformationEdge";
+import { TransformationEdge } from "./TransformationEdge";
 
 export type IHNode = SourceNode | IHGraph;
-
-export interface NamedElement {
-    getId(): String | undefined;
-}
-
-export function getIds(elements: NamedElement[]): string[] {
-    return elements.map((val) => val.getId()!).filter((val) => val != undefined) as string[];
-}
 
 export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
     protected parent: IHGraph | undefined;

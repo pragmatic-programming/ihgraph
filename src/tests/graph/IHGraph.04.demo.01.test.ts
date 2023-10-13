@@ -14,13 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import exp = require("constants");
 import { createTHGraphFromJSON } from "../../graph/IHFactory";
 import { IHGraph } from "../../graph/IHGraph";
 
 function testGraphDemo01(): IHGraph {
     const graph = 
-    `{
+    {
         "nodes": [
             {
                 "id": "Defines"
@@ -50,9 +49,9 @@ function testGraphDemo01(): IHGraph {
                 "targetNode": "Loop"
             }
         ]
-    }`;
+    };
 
-    const thGraph = createTHGraphFromJSON(graph);
+    const thGraph = createTHGraphFromJSON(JSON.stringify(graph));
     
     return thGraph;
 }

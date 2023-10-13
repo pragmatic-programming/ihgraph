@@ -16,7 +16,6 @@
 
 import exp = require("constants");
 import { IHGraph } from "../../graph/IHGraph";
-import cluster from "cluster";
 
 function testGraphClique(): IHGraph {
     const graph = new IHGraph();
