@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { createTHGraphFromJSON } from "../../graph/IHFactory";
+import { createIHGraphFromJSON } from "../../graph/IHFactory";
 import { IHGraph } from "../../graph/IHGraph";
 
 function testGraphDemo01(): IHGraph {
@@ -51,9 +51,9 @@ function testGraphDemo01(): IHGraph {
         ]
     };
 
-    const thGraph = createTHGraphFromJSON(JSON.stringify(graph));
+    const ihGraph = createIHGraphFromJSON(graph);
     
-    return thGraph;
+    return ihGraph;
 }
 
 test("createTHGraphDemo01Create", () => {

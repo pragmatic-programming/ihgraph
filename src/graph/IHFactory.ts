@@ -16,7 +16,7 @@
 
 import { IHGraph } from "./IHGraph";
 
-export function createTHGraphFromJSON(json: string) {
+export function createIHGraphFromJSONString(json: string) {
     const parsedJSON = JSON.parse(json);
     const thGraph = new IHGraph();
 
@@ -44,4 +44,8 @@ export function createTHGraphFromJSON(json: string) {
     }
 
     return thGraph;
+}
+
+export function createIHGraphFromJSON(json: any) {
+    return createIHGraphFromJSONString(JSON.stringify(json));
 }

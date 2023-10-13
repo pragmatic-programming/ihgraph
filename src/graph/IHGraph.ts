@@ -20,6 +20,7 @@ import { EdgeType } from "./EdgeType";
 import { NamedElement, getIds } from "./NamedElement";
 import { SourceNode } from "./SourceNode";
 import { TransformationEdge } from "./TransformationEdge";
+import { TransformationConfiguration, TransformationProcessor } from "./TransformationConfiguration";
 
 export type IHNode = SourceNode | IHGraph;
 
@@ -30,9 +31,11 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
     protected edgeTypes : EdgeType[] = [];
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
+    protected transformationConfiguration: TransformationConfiguration;;
 
     constructor(parent: IHGraph | undefined = undefined) {
         this.parent = parent;
+        this.transformationConfiguration = new TransformationConfiguration();
     }
 
     public getId(): string | undefined {
@@ -394,5 +397,13 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         }
 
         return true;
+    }
+
+    public getTransformationConfiguration(): TransformationConfiguration {
+        return this.transformationConfiguration;
+    }
+
+    public setTransformationConfiguration(edgeType: EdgeType, processor: TransformationProcessor): void {
+        this.transformationConfiguration.set(edgeType, processor);
     }
 }
