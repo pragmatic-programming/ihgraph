@@ -16,6 +16,7 @@
 
 import exp = require("constants");
 import { IHGraph } from "../../graph/IHGraph";
+import cluster from "cluster";
 
 function testGraphClique(): IHGraph {
     const graph = new IHGraph();
@@ -215,4 +216,21 @@ test("replaceClique", () => {
 
     expect(graph.getSourceNodeEdges()[0].getSourceNode().getId()).toBe("Node1");
     expect(graph.getSourceNodeEdges()[0].getTargetNode().getId()).toBe("Node8");
+});
+
+test("equalsClique", () => {
+    const graph = testGraphClique();
+
+    const clique = graph.getNextClique();
+    const clique2 = graph.getNextClique();
+
+    expect(clique).toBeDefined();
+    expect(clique2).toBeDefined();
+    
+    expect(clique.equals(clique)).toBe(true);
+    expect(clique.equals(clique2)).toBe(true);
+    expect(clique2.equals(clique)).toBe(true);
+
+    expect(clique.equals(graph)).toBe(false);
+    expect(clique2.equals(testGraphClique2())).toBe(false);
 });

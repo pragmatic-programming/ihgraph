@@ -25,6 +25,10 @@ export interface NamedElement {
     getId(): String | undefined;
 }
 
+export function getIds(elements: NamedElement[]): string[] {
+    return elements.map((val) => val.getId()!).filter((val) => val != undefined) as string[];
+}
+
 export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
     protected parent: IHGraph | undefined;
     protected nodes: IHNode[] = [];
@@ -285,8 +289,8 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
     public getNextClique(): IHGraph {
         const node = this.getHighestPriorityNode();
         const edges = [...node.getOutgoingEdges(), ...node.getIncomingEdges()];
-        const prio = edges.map((val) => val.getType().getPriority()).reduce((prev, curr) => (prev < curr) ? curr : prev, 0);
-        const edgeType = edges.filter((val) => val.getType().getPriority() === prio)[0].getType();
+        const priority = edges.map((val) => val.getType().getPriority()).reduce((prev, curr) => (prev < curr) ? curr : prev, 0);
+        const edgeType = edges.filter((val) => val.getType().getPriority() === priority)[0].getType();
 
         return this.getClique(node, edgeType);
     }
@@ -337,8 +341,6 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         });
     }
 
-
-
     public replaceClique(clique: IHGraph, replacement: IHGraph): void {
         // Replace the old clique by a new one and re-route all edges from outside the clique to the new one.
         // If the new clique only contains one node, all edges will be re-routed to the node.
@@ -358,5 +360,45 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
 
         externalSourceEdges.forEach((val) => { val.setTargetNode(primaryNode); });
         externalTargetEdges.forEach((val) => { val.setSourceNode(primaryNode); });
+    }
+
+    public equals(graph: IHGraph): boolean {
+        // A graph is equal to another graph or clique if all nodes (ids), edge types, and edges are the same.
+        // The order of the nodes and edges does not matter.
+
+        const nodes = this.getDeepNodes();
+        const edges = this.getDeepEdges();
+        const types = this.getEdgeTypes();
+        const graphNodes = graph.getDeepNodes();
+        const graphEdges = graph.getDeepEdges();
+        const graphTypes = graph.getEdgeTypes();
+
+        if (nodes.length != graphNodes.length || edges.length != graphEdges.length || types.length != graphTypes.length) {
+            return false;
+        }
+
+        const nodeIds = getIds(nodes);
+        const graphNodeIds = getIds(graphNodes);
+        
+        if (nodeIds.some((val) => !graphNodeIds.includes(val))) {
+            return false;
+        }
+    
+        const edgeTypeIds = getIds(types);
+        const graphEdgeTypeIds = getIds(graphTypes);
+
+        if (edgeTypeIds.some((val) => !graphEdgeTypeIds.includes(val))) {
+            return false;
+        }
+
+        if (edges.some((val) => !graphEdges.some((graphVal) => 
+            graphVal.getSourceNode().getId() === val.getSourceNode().getId() && 
+            graphVal.getTargetNode().getId() === val.getTargetNode().getId() && 
+            graphVal.getType().getId() === val.getType().getId()
+        ))) {
+            return false;
+        }
+
+        return true;
     }
 }
