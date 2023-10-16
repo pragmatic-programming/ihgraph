@@ -166,12 +166,45 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         }
     }
 
+    public removeNode(node: IHNode): void {
+        const index = this.nodes.indexOf(node);
+        if (index > -1) {
+            this.nodes.splice(index, 1);
+        }
+    }
+
+    public removeNodeById(id: string): void {
+        const node = this.getNodeById(id);
+        if (node == undefined) {
+            throw Error("Node with id " + id + " does not exist!");
+        }
+        this.removeNode(node);
+    }
+
     public getEdges(): TransformationEdge[] {
         return this.edges;
     }
 
     public getSourceNodeEdges(): TransformationEdge[] {
         return this.edges.filter((edge) => edge.getSourceNode() instanceof SourceNode && edge.getTargetNode() instanceof SourceNode);
+    }
+
+    public removeEdge(edge: TransformationEdge): void {
+        const index = this.edges.indexOf(edge);
+        if (index > -1) {
+            this.edges.splice(index, 1);
+        }
+    }
+
+    public removeEdgeByIds(edge: TransformationEdge): void {
+        const sourceNodeId = edge.getSourceNode().getId();
+        const targetNodeId = edge.getTargetNode().getId();
+        const edgeTypeId = edge.getType().getId();
+        const edgesToRemove = this.edges.filter((edge) => 
+            edge.getSourceNode().getId() === sourceNodeId && 
+            edge.getTargetNode().getId() === targetNodeId && 
+            edge.getType().getId() === edgeTypeId);
+        edgesToRemove.forEach((edge) => this.removeEdge(edge));
     }
 
     public getEdgeTypes(): EdgeType[] {
@@ -208,8 +241,6 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         const graphEdges = graphNodes.map((val) => val.getDeepEdges()).reduce((prev, curr) => prev.concat(curr), []);
         return this.edges.concat(graphEdges);
     }
-
-
 
     private stringifyCensor(censor: any) {
         var i = 0;
@@ -300,19 +331,17 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         const cliqueNodes = clique.getDeepNodes();
         const cliqueEdges = clique.getDeepEdges();
 
+        cliqueEdges.forEach((val) => {
+            this.removeEdgeByIds(val);
+        });
         cliqueNodes.forEach((val) => {
-            const index = this.nodes.indexOf(val);
-            if (index > -1) {
-                this.nodes.splice(index, 1);
+            if (val instanceof SourceNode) {
+                this.removeNodeById(val.getId());
+            } else {
+                this.removeNode(val);
             }
         });
 
-        cliqueEdges.forEach((val) => {
-            const index = this.edges.indexOf(val);
-            if (index > -1) {
-                this.edges.splice(index, 1);
-            }
-        });
     }
 
     public addClique(clique: IHGraph): void {
