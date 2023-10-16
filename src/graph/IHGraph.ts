@@ -120,6 +120,8 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
             edgeMapping.set(edge, edgeClone);
         }, this);
 
+        clone.transformationConfiguration = this.transformationConfiguration;
+
         return [clone, nodeMapping, edgeMapping, typeMapping];
     }
 
@@ -279,6 +281,7 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         visited.forEach((val) => clique.nodes.push(val));
         clique.edgeTypes.push(edgeType);
         clique.edges = this.getDeepEdges().filter((val) => val.getType() === edgeType && visited.includes(val.getSourceNode()) && visited.includes(val.getTargetNode()));
+        clique.transformationConfiguration = this.transformationConfiguration;
 
         return clique;
     }
@@ -403,7 +406,7 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         return this.transformationConfiguration;
     }
 
-    public setTransformationConfiguration(edgeType: EdgeType, processor: TransformationProcessor): void {
+    public setTransformationConfiguration(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
         this.transformationConfiguration.set(edgeType, processor);
     }
 }

@@ -18,11 +18,11 @@ import { IHGraph } from "./IHGraph";
 
 export function createIHGraphFromJSONString(json: string) {
     const parsedJSON = JSON.parse(json);
-    const thGraph = new IHGraph();
+    const ihGraph = new IHGraph();
 
     // create nodes
     for (const node of parsedJSON.nodes) {
-        const newNode = thGraph.createSourceNode(node.id);
+        const newNode = ihGraph.createSourceNode(node.id);
         if (node.content) {
             newNode.setContent(node.content);
         }
@@ -30,20 +30,20 @@ export function createIHGraphFromJSONString(json: string) {
 
     // create edge types
     for (const edgeType of parsedJSON.edgeTypes) {
-        thGraph.createEdgeType(edgeType.id, edgeType.priority);
+        ihGraph.createEdgeType(edgeType.id, edgeType.priority);
     }
 
     // create edges
     for (const edge of parsedJSON.edges) {
-        const sourceNode = thGraph.getNodeById(edge.sourceNode);
-        const targetNode = thGraph.getNodeById(edge.targetNode);
-        const edgeType = thGraph.getEdgeTypeById(edge.type);
+        const sourceNode = ihGraph.getNodeById(edge.sourceNode);
+        const targetNode = ihGraph.getNodeById(edge.targetNode);
+        const edgeType = ihGraph.getEdgeTypeById(edge.type);
         if (sourceNode && targetNode && edgeType) {
-            thGraph.createTransformationEdge(edgeType, sourceNode, targetNode);
+            ihGraph.createTransformationEdge(edgeType, sourceNode, targetNode);
         }
     }
 
-    return thGraph;
+    return ihGraph;
 }
 
 export function createIHGraphFromJSON(json: any) {

@@ -18,24 +18,33 @@ import * as kico from "kico";
 import { EdgeType } from "./EdgeType";
 import { IHGraph } from "./IHGraph";
 
-export type TransformationProcessor = kico.Processor<IHGraph, IHGraph>;
+export class TransformationProcessor extends kico.Processor<IHGraph, IHGraph> {}
 
 export class TransformationConfiguration {
-    protected mapping: Map<EdgeType, TransformationProcessor>;
+    protected mapping: Map<EdgeType, typeof TransformationProcessor>;
 
     constructor() {
-        this.mapping = new Map<EdgeType, TransformationProcessor>();
+        this.mapping = new Map<EdgeType, typeof TransformationProcessor>();
     }
 
-    public getTransformationConfiguration(): Map<EdgeType, TransformationProcessor> {
+    public getTransformationConfiguration(): Map<EdgeType, typeof TransformationProcessor> {
         return this.mapping;
     }
 
-    public get(edgeType: EdgeType): TransformationProcessor | undefined {
-        return this.mapping.get(edgeType);
+    public get(edgeType: EdgeType): typeof TransformationProcessor | undefined {
+    //     const value = [...this.mapping.entries()].find(
+    //         ([key, val]) => key.getId() === edgeType.getId())?.[1];
+
+    //     return value;
+    // }
+        for (const [key, value] of this.mapping.entries()) {
+            if (key.getId() === edgeType.getId()) {
+                return value;
+            }
+        }
     }
 
-    public set(edgeType: EdgeType, processor: TransformationProcessor): void {
+    public set(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
         this.mapping.set(edgeType, processor);
     }
 }

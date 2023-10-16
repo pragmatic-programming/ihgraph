@@ -14,8 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export * from './graph/IHGraph';
 export * from './graph/EdgeType';
+export * from './graph/IHGraph';
+export * from './graph/IHFactory';
 export * from './graph/SourceNode';
 export * from './graph/TransformationEdge';
-export * from './graph/IHFactory';
+export * from './graph/TransformationConfiguration';
