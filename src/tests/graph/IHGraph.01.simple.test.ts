@@ -15,17 +15,7 @@
  ********************************************************************************/
 
 import { IHGraph } from "../../graph/IHGraph";
-
-function testGraphSimple(): IHGraph {
-    const thGraph = new IHGraph();
-    
-    const node1 = thGraph.createSourceNode("Node1");
-    const node2 = thGraph.createSourceNode("Node2");
-    const type1 = thGraph.createEdgeType("Type1", 1);
-    thGraph.createTransformationEdge(type1, node1, node2);
-
-    return thGraph;
-}
+import { testGraphSimple } from "./TestGraphs";
 
 test("createTHGraphSimple", () => {
     // given
@@ -85,53 +75,3 @@ test("checkTHGraphSimplePriority", () => {
     expect(thGraph.getHighestPriority()).toBe(32);
 });
 
-test("checkTHGraphSimpleCloneSizes", () => {
-    // given
-    const thGraph = testGraphSimple();
-
-    // when
-    const clone = thGraph.clone();
-
-    // then
-    expect(clone.getNodes().length).toBe(2);
-    expect(clone.getEdgeTypes().length).toBe(1);
-    expect(clone.getEdges().length).toBe(1);
-});
-    
-test("checkTHGraphSimpleCloneReferences", () => {
-    // given
-    const thGraph = testGraphSimple();
-
-    // when
-    const clone = thGraph.clone();
-
-    // then
-    thGraph.getNodes().forEach((node, index) => {
-        expect(node).not.toBe(clone.getNodes()[index]);
-    });
-    thGraph.getEdgeTypes().forEach((type, index) => {
-        expect(type).not.toBe(clone.getEdgeTypes()[index]);
-    });
-    thGraph.getEdges().forEach((edge, index) => {
-        expect(edge).not.toBe(clone.getEdges()[index]);
-    });
-});
-    
-test("checkTHGraphSimpleCloneComplete", () => {
-    // given
-    const thGraph = testGraphSimple();
-
-    // when
-    const clone = thGraph.clone();
-
-    const cloneNode1 = clone.getNodeById("Node1");
-    const cloneNode2 = clone.getNodeById("Node2");
-    
-    // then
-    expect(cloneNode1).toBeDefined();
-    expect(cloneNode2).toBeDefined();
-    expect(clone.getEdges()[0].getSourceNode()).toBe(cloneNode1);
-    expect(clone.getEdges()[0].getTargetNode()).toBe(cloneNode2);
-    expect(clone.getEdges()[0].getType().getPriority()).toBe(thGraph.getEdges()[0].getType().getPriority());
-});
-    

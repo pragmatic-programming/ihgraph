@@ -17,6 +17,7 @@
 import * as kico from "kico";
 import { IHGraph } from "../../graph/IHGraph";
 import { EdgeType } from "../../graph/EdgeType";
+import { TransformationProcessor } from "../../graph/TransformationProcessor";
 
 function testGraphSimple(): IHGraph {
     const thGraph = new IHGraph();
@@ -29,7 +30,7 @@ function testGraphSimple(): IHGraph {
     return thGraph;
 }
 
-class Sequence extends kico.Processor<IHGraph, IHGraph> {}
+class Sequence extends TransformationProcessor {}
 
 test("transformationConfiguration", () => {
     const thGraph = testGraphSimple();
