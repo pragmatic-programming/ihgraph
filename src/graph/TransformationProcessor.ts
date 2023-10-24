@@ -14,10 +14,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export * from './graph/EdgeType';
-export * from './graph/IHGraph';
-export * from './graph/IHFactory';
-export * from './graph/SourceNode';
-export * from './graph/TransformationEdge';
-export * from './graph/TransformationConfiguration';
-export * from './graph/TransformationProcessor';
+import * as kico from "kico";
+import { IHGraph } from "./IHGraph";
+import { SourceNode } from "./SourceNode";
+
+export class TransformationProcessor extends kico.Processor<IHGraph, IHGraph> {
+
+    public createSingleResultNode(id: string): SourceNode {
+        const targetGraph = new IHGraph();
+        const sourceNode = targetGraph.createSourceNode(id);
+        return sourceNode;
+    }
+
+    public createSingleStringResultNode(id: string, content: string): SourceNode {
+        const sourceNode = this.createSingleResultNode(id);
+        sourceNode.setContent(content);
+        return sourceNode;
+    }
+}

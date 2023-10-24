@@ -20,7 +20,8 @@ import { EdgeType } from "./EdgeType";
 import { NamedElement, getIds } from "./NamedElement";
 import { SourceNode } from "./SourceNode";
 import { TransformationEdge } from "./TransformationEdge";
-import { TransformationConfiguration, TransformationProcessor } from "./TransformationConfiguration";
+import { TransformationConfiguration } from "./TransformationConfiguration";
+import { TransformationProcessor } from "./TransformationProcessor";
 
 export type IHNode = SourceNode | IHGraph;
 
@@ -109,11 +110,11 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
             }
             const sourceNode = nodeMapping.get(edge.getSourceNode());
             if (sourceNode == undefined) {
-                throw Error("Edge type is not mapped! The graph structure is corrupted!");
+                throw Error("Source node is not mapped! The graph structure is corrupted! (" + edge.getSourceNode().getId() + ")");
             }
             const targetNode = nodeMapping.get(edge.getTargetNode());
             if (targetNode == undefined) {
-                throw Error("Edge type is not mapped! The graph structure is corrupted!");
+                throw Error("Target node is not mapped! The graph structure is corrupted! (" + edge.getTargetNode().getId() + ")");
             }
 
             const edgeClone = clone.createTransformationEdge(type, sourceNode, targetNode);
@@ -159,6 +160,14 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         return this.nodes;
     }
 
+    public getRootNodes(): SourceNode[] {
+        return this.getSourceNodes().filter((node) => node.getIncomingEdges().length === 0);
+    }
+
+    public getSinkNodes(): SourceNode[] {
+        return this.getSourceNodes().filter((node) => node.getOutgoingEdges().length === 0);
+    }
+
     public addNode(node: IHNode) {
         this.nodes.push(node);
         if (node instanceof IHGraph) {
@@ -194,6 +203,7 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         if (index > -1) {
             this.edges.splice(index, 1);
         }
+        edge.remove();
     }
 
     public removeEdgeByIds(edge: TransformationEdge): void {
@@ -375,13 +385,11 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         // If the new clique only contains one node, all edges will be re-routed to the node.
         // Otherwise, they will lead to the first node.
 
-        const cliqueNodes = clique.getDeepNodes();
-        const externalSourceEdges = cliqueNodes.map((node) => node.getIncomingEdges())
-            .flat()
-            .filter((val) => !cliqueNodes.includes(val.getSourceNode()));
-        const externalTargetEdges = cliqueNodes.map((node) => node.getOutgoingEdges())
-            .flat()
-            .filter((val) => !cliqueNodes.includes(val.getTargetNode()));
+        const cliqueNodesIds = clique.getDeepNodes().map((val) => val.getId());
+        const externalSourceEdges = this.edges.filter((val) => 
+            !cliqueNodesIds.includes(val.getSourceNode().getId()) && cliqueNodesIds.includes(val.getTargetNode().getId()));
+        const externalTargetEdges = this.edges.filter((val) =>
+            !cliqueNodesIds.includes(val.getTargetNode().getId()) && cliqueNodesIds.includes(val.getSourceNode().getId()));
 
         this.removeClique(clique);
         this.addClique(replacement);
@@ -437,5 +445,15 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
 
     public setTransformationConfiguration(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
         this.transformationConfiguration.set(edgeType, processor);
+    }
+
+    public setTransformationConfigurationById(edgeTypeId: string, processor: typeof TransformationProcessor): void {
+        const edgeType = new EdgeType(edgeTypeId);
+        
+        if (edgeType == undefined) {
+            throw new Error(`EdgeType with id ${edgeTypeId} does not exist.`);
+        }
+        
+        this.setTransformationConfiguration(edgeType, processor);
     }
 }

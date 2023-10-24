@@ -16,6 +16,7 @@
 
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
+import { SourceNode } from "./SourceNode";
 
 export class TransformationEdge {
     protected parent : IHNode;
@@ -51,13 +52,25 @@ export class TransformationEdge {
 
     public setSourceNode(sourceNode: IHNode): void {
         this.sourceNode = sourceNode;
+        sourceNode.addOutgoingEdge(this);
     }
 
     public setTargetNode(targetNode: IHNode): void {
         this.targetNode = targetNode;
+        targetNode.addIncomingEdge(this);
     }
 
     public setType(type: EdgeType): void {
         this.type = type;
     }
+
+    public remove(): void {
+        if (this.sourceNode instanceof SourceNode) {
+            this.sourceNode.removeOutgoingEdge(this);
+        }
+        if (this.targetNode instanceof SourceNode) {
+            this.targetNode.removeIncomingEdge(this);
+        }
+    }
+
 }

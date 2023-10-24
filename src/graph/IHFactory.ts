@@ -36,11 +36,24 @@ export function createIHGraphFromJSONString(json: string) {
     // create edges
     for (const edge of parsedJSON.edges) {
         const sourceNode = ihGraph.getNodeById(edge.sourceNode);
-        const targetNode = ihGraph.getNodeById(edge.targetNode);
-        const edgeType = ihGraph.getEdgeTypeById(edge.type);
-        if (sourceNode && targetNode && edgeType) {
-            ihGraph.createTransformationEdge(edgeType, sourceNode, targetNode);
+        
+        if (!sourceNode) {
+            throw new Error(`Source node with id ${edge.sourceNode} does not exist.`);
         }
+
+        const targetNode = ihGraph.getNodeById(edge.targetNode);
+
+        if (!targetNode) {
+            throw new Error(`Target node with id ${edge.targetNode} does not exist.`);
+        }
+
+        const edgeType = ihGraph.getEdgeTypeById(edge.type);
+
+        if (!edgeType) {
+            throw new Error(`Edge type with id ${edge.type} does not exist.`);
+        }
+
+        ihGraph.createTransformationEdge(edgeType, sourceNode, targetNode);
     }
 
     return ihGraph;

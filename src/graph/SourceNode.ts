@@ -48,6 +48,10 @@ export class SourceNode implements EdgeReceiver, NamedElement {
         this.content = content;
     }
 
+    public appendContent(content: string): void {
+        this.content += content;
+    }
+
     public getIncomingEdges(): TransformationEdge[] {
         return this.incomingEdges;
     }
@@ -62,5 +66,13 @@ export class SourceNode implements EdgeReceiver, NamedElement {
 
     public addOutgoingEdge(edge: TransformationEdge): void {
         this.outgoingEdges.push(edge);
+    }
+
+    public removeIncomingEdge(edge: TransformationEdge): void {
+        this.incomingEdges = this.incomingEdges.filter((e) => e !== edge);
+    }
+
+    public removeOutgoingEdge(edge: TransformationEdge): void {
+        this.outgoingEdges = this.outgoingEdges.filter((e) => e !== edge);
     }
 }

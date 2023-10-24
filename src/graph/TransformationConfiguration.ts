@@ -17,8 +17,7 @@
 import * as kico from "kico";
 import { EdgeType } from "./EdgeType";
 import { IHGraph } from "./IHGraph";
-
-export class TransformationProcessor extends kico.Processor<IHGraph, IHGraph> {}
+import { TransformationProcessor } from "./TransformationProcessor";
 
 export class TransformationConfiguration {
     protected mapping: Map<EdgeType, typeof TransformationProcessor>;
@@ -46,5 +45,15 @@ export class TransformationConfiguration {
 
     public set(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
         this.mapping.set(edgeType, processor);
+    }
+
+    public setById(edgeTypeId: string, processor: typeof TransformationProcessor): void {
+        const edgeType = new EdgeType(edgeTypeId);
+        
+        if (edgeType === undefined) {
+            throw new Error(`EdgeType with id ${edgeTypeId} does not exist.`);
+        }
+        
+        this.set(edgeType, processor);
     }
 }
