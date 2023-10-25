@@ -17,10 +17,12 @@
 export class EdgeType {
     private id: string;
     private priority: number;
+    private immediate: boolean;
 
     constructor(id: string, priority: number = 0) {
         this.id = id;
         this.priority = priority;
+        this.immediate = false;
     }
 
     public getId(): string {
@@ -31,4 +33,15 @@ export class EdgeType {
         return this.priority;
     }
 
+    public setPriority(priority: number): void {
+        this.priority = priority;
+    }
+
+    public isImmediate(): boolean {
+        return this.immediate;
+    }
+
+    public setImmediate(immediate: boolean): void {
+        this.immediate = immediate;
+    }
 }

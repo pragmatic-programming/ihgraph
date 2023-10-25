@@ -100,6 +100,7 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
 
         this.edgeTypes.forEach((type) => {
             const typeClone = clone.createEdgeType(type.getId(), type.getPriority());
+            typeClone.setImmediate(type.isImmediate());
             typeMapping.set(type, typeClone);
         }, this);
 
