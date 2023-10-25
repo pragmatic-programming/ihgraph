@@ -25,6 +25,12 @@ export class EdgeType {
         this.immediate = false;
     }
 
+    public clone(): EdgeType {
+        const newType = new EdgeType(this.id, this.priority);
+        newType.setImmediate(this.immediate);
+        return newType;
+    }
+
     public getId(): string {
         return this.id;
     }

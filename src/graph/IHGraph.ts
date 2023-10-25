@@ -85,8 +85,8 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
 
         this.nodes.forEach((node) => {
             if (node instanceof SourceNode) {
-                const nodeClone = clone.createSourceNode(node.getId());
-                nodeClone.setContent(node.getContent());
+                const nodeClone = node.clone(clone);
+                clone.addNode(nodeClone);
                 nodeMapping.set(node, nodeClone);
             } else {
                 const nodeClone = node.cloneWithMappings();
@@ -99,8 +99,8 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
         }, this);
 
         this.edgeTypes.forEach((type) => {
-            const typeClone = clone.createEdgeType(type.getId(), type.getPriority());
-            typeClone.setImmediate(type.isImmediate());
+            const typeClone = type.clone();
+            clone.addEdgeType(typeClone);
             typeMapping.set(type, typeClone);
         }, this);
 
@@ -197,6 +197,10 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
 
     public getSourceNodeEdges(): TransformationEdge[] {
         return this.edges.filter((edge) => edge.getSourceNode() instanceof SourceNode && edge.getTargetNode() instanceof SourceNode);
+    }
+
+    public addEdgeType(edgeType: EdgeType) {
+        this.edgeTypes.push(edgeType);
     }
 
     public removeEdge(edge: TransformationEdge): void {

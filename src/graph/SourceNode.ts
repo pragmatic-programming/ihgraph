@@ -40,6 +40,13 @@ export class SourceNode implements EdgeReceiver, NamedElement {
         this.id = id;
     }
 
+    public clone(parent: IHGraph | null = null): SourceNode {    
+        const clone = new SourceNode(parent ? parent : this.parent, this.id);
+        clone.content = this.content;
+        clone.status = this.status;
+        return clone;
+    }
+
     public getParent(): IHGraph {
         return this.parent;
     }
