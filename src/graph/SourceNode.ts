@@ -19,11 +19,19 @@ import { IHGraph } from "./IHGraph";
 import { NamedElement } from "./NamedElement";
 import { TransformationEdge } from "./TransformationEdge";
 
+export enum SourceNodeStatus {
+    UNDEFINED = "UNDEFINED",
+    OK = "OK",
+    WARNING = "WARNING",
+    ERROR = "ERROR"
+}
+
 export type SourceNodeContent = string;
 export class SourceNode implements EdgeReceiver, NamedElement {
     protected parent : IHGraph;
     protected id : string;
     protected content : string = "";
+    protected status : SourceNodeStatus = SourceNodeStatus.UNDEFINED;
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
 
@@ -50,6 +58,14 @@ export class SourceNode implements EdgeReceiver, NamedElement {
 
     public appendContent(content: string): void {
         this.content += content;
+    }
+
+    public getStatus(): SourceNodeStatus {
+        return this.status;
+    }
+
+    public setStatus(status: SourceNodeStatus): void {
+        this.status = status;
     }
 
     public getIncomingEdges(): TransformationEdge[] {
