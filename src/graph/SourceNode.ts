@@ -21,7 +21,7 @@ import { TransformationEdge } from "./TransformationEdge";
 
 export enum SourceNodeStatus {
     UNDEFINED = "UNDEFINED",
-    OK = "OK",
+    SUCCESS = "SUCCESS",
     WARNING = "WARNING",
     ERROR = "ERROR"
 }
