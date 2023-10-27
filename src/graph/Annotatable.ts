@@ -14,25 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { Annotatable } from "./Annotatable";
+export class Annotatable {
+    protected annotations: { [key: string]: any } = {};
 
-export class NamedElement extends Annotatable {
-    protected id: string | undefined;
-
-    constructor(id: string | undefined = undefined) {
-        super();
-        this.id = id;
+    getAnnotations(): { [key: string]: any } {
+        return this.annotations;
     }
 
-    getId(): string | undefined {
-        return this.id;
-    }
-
-    setId(id: string): void {
-        this.id = id;
+    setAnnotations(annotations: { [key: string]: any }): void {
+        this.annotations = annotations;
     }
 }
 
-export function getIds(elements: NamedElement[]): string[] {
-    return elements.map((val) => val.getId()!).filter((val) => val != undefined) as string[];
-}

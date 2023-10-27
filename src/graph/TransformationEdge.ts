@@ -14,17 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+import { Annotatable } from "./Annotatable";
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
 import { SourceNode } from "./SourceNode";
 
-export class TransformationEdge {
+export class TransformationEdge extends Annotatable {
     protected parent : IHNode;
     protected sourceNode: IHNode;
     protected targetNode: IHNode;
     protected type: EdgeType;
 
     constructor(parent: IHNode, type: EdgeType, sourceNode: IHNode, targetNode: IHNode) {
+        super();
         this.parent = parent;
         this.type = type;
         this.sourceNode = sourceNode;

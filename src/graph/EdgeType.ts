@@ -14,27 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export class EdgeType {
-    private id: string;
+import { NamedElement } from "./NamedElement";
+
+export class EdgeType extends NamedElement {
     private priority: number;
     private immediate: boolean;
 
     constructor(id: string, priority: number = 0) {
+        super(id);
         this.id = id;
         this.priority = priority;
         this.immediate = false;
     }
 
     public clone(): EdgeType {
-        const newType = new EdgeType(this.id, this.priority);
+        const newType = new EdgeType(this.getId()!, this.priority);
         newType.setImmediate(this.immediate);
         return newType;
     }
 
-    public getId(): string {
-        return this.id;
-    }
-    
     public getPriority(): number {
         return this.priority;
     }

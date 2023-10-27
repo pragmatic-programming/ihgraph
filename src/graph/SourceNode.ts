@@ -14,6 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+import { Annotatable } from "./Annotatable";
 import { EdgeReceiver } from "./EdgeReceiver";
 import { IHGraph } from "./IHGraph";
 import { NamedElement } from "./NamedElement";
@@ -27,7 +28,7 @@ export enum SourceNodeStatus {
 }
 
 export type SourceNodeContent = string;
-export class SourceNode implements EdgeReceiver, NamedElement {
+export class SourceNode extends NamedElement implements EdgeReceiver {
     protected parent : IHGraph;
     protected id : string;
     protected content : string = "";
@@ -36,6 +37,7 @@ export class SourceNode implements EdgeReceiver, NamedElement {
     protected outgoingEdges: TransformationEdge[] = [];
 
     constructor(parent: IHGraph, id : string = "") {
+        super(id);
         this.parent = parent;
         this.id = id;
     }

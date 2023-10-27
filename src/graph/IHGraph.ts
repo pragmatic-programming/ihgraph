@@ -25,7 +25,7 @@ import { TransformationProcessor } from "./TransformationProcessor";
 
 export type IHNode = SourceNode | IHGraph;
 
-export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
+export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoCloneable {
     protected parent: IHGraph | undefined;
     protected nodes: IHNode[] = [];
     protected edges: TransformationEdge[] = [];
@@ -35,12 +35,9 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
     protected transformationConfiguration: TransformationConfiguration;;
 
     constructor(parent: IHGraph | undefined = undefined) {
+        super();
         this.parent = parent;
         this.transformationConfiguration = new TransformationConfiguration();
-    }
-
-    public getId(): string | undefined {
-        return undefined;
     }
 
     public getParent(): IHGraph | undefined {
@@ -370,9 +367,9 @@ export class IHGraph implements EdgeReceiver, NamedElement, kico.KicoCloneable {
 
         const edgeTypeMap = new Map<EdgeType, EdgeType>();
         clique.getEdgeTypes().forEach((val) => {
-            const edgeType = this.getEdgeTypeById(val.getId());
+            const edgeType = this.getEdgeTypeById(val.getId()!);
             if (edgeType == undefined) {
-                const newEdgeType = this.createEdgeType(val.getId(), val.getPriority());
+                const newEdgeType = this.createEdgeType(val.getId()!, val.getPriority());
                 edgeTypeMap.set(val, newEdgeType);
             } else {
                 edgeTypeMap.set(val, edgeType);
