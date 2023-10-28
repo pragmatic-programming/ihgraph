@@ -16,6 +16,12 @@
 
 import { IHGraph } from "./IHGraph";
 
+export type SourceNodeFactoryType = {id: string, content: string};
+
+export type EdgeTypeFactoryType = {id: string, priority: number, immediate: boolean};
+
+export type EdgeFactoryType = {edgeType: string, sourceNode: string, targetNode: string}
+
 export function createIHGraphFromJSONString(json: string) {
     const parsedJSON = JSON.parse(json);
     const ihGraph = new IHGraph();
@@ -47,7 +53,7 @@ export function createIHGraphFromJSONString(json: string) {
             throw new Error(`Target node with id ${edge.targetNode} does not exist.`);
         }
 
-        const edgeType = ihGraph.getEdgeTypeById(edge.type);
+        const edgeType = ihGraph.getEdgeTypeById(edge.edgeType);
 
         if (!edgeType) {
             throw new Error(`Edge type with id ${edge.type} does not exist.`);

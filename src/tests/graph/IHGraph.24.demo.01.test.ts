@@ -14,47 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { createIHGraphFromJSON } from "../../graph/IHFactory";
 import { IHGraph } from "../../graph/IHGraph";
-
-function testGraphDemo01(): IHGraph {
-    const graph = 
-    {
-        "nodes": [
-            {
-                "id": "Defines"
-            },
-            {
-                "id": "Setup"
-            },
-            {
-                "id": "Loop"
-            }
-        ],
-        "edgeTypes": [
-            {
-                "id": "Sequence",
-                "priority": 1
-            }
-        ],
-        "edges": [
-            {
-                "type": "Sequence",
-                "sourceNode": "Defines",
-                "targetNode": "Setup"
-            },
-            {
-                "type": "Sequence",
-                "sourceNode": "Setup",
-                "targetNode": "Loop"
-            }
-        ]
-    };
-
-    const ihGraph = createIHGraphFromJSON(graph);
-    
-    return ihGraph;
-}
+import { testGraphDemo01 } from "./TestGraphs";
 
 test("createTHGraphDemo01Create", () => {
     // given
@@ -80,3 +41,4 @@ test("createTHGraphDemo01Create", () => {
     expect(thGraph.getNodes()[1].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[2].getParent()).toBe(thGraph);
 });
+

@@ -27,6 +27,7 @@ export enum SourceNodeStatus {
     ERROR = "ERROR"
 }
 
+
 export type SourceNodeContent = string;
 export class SourceNode extends NamedElement implements EdgeReceiver {
     protected parent : IHGraph;

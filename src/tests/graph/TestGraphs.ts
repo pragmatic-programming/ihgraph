@@ -28,6 +28,46 @@ export function testGraphSimple(): IHGraph {
     return thGraph;
 }
 
+export function testGraphDemo01(): IHGraph {
+    const graph = 
+    {
+        "nodes": [
+            {
+                id: "Defines"
+            },
+            {
+                id: "Setup"
+            },
+            {
+                id: "Loop"
+            }
+        ],
+        "edgeTypes": [
+            {
+                id: "Sequence",
+                priority: 1
+            }
+        ],
+        "edges": [
+            {
+                edgeType: "Sequence",
+                sourceNode: "Defines",
+                targetNode: "Setup"
+            },
+            {
+                edgeType: "Sequence",
+                sourceNode: "Setup",
+                targetNode: "Loop"
+            }
+        ]
+    };
+
+    const ihGraph = createIHGraphFromJSON(graph);
+    
+    return ihGraph;
+}
+
+
 export function testGraphDemo02(): IHGraph {
     const graph = {
         "nodes": [
@@ -56,12 +96,12 @@ export function testGraphDemo02(): IHGraph {
         ],
         "edges": [
             {
-                type: "Sequence",
+                edgeType: "Sequence",
                 sourceNode: "Define",
                 targetNode: "Add"
             },
             {
-                type: "Execute",
+                edgeType: "Execute",
                 sourceNode: "Add",
                 targetNode: "Result"
             }

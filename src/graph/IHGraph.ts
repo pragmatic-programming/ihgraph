@@ -22,6 +22,7 @@ import { SourceNode } from "./SourceNode";
 import { TransformationEdge } from "./TransformationEdge";
 import { TransformationConfiguration } from "./TransformationConfiguration";
 import { TransformationProcessor } from "./TransformationProcessor";
+import { EdgeFactoryType, EdgeTypeFactoryType, SourceNodeFactoryType } from "./IHFactory";
 
 export type IHNode = SourceNode | IHGraph;
 
@@ -237,7 +238,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     }
 
     public getEdgeTypeById(id: string): EdgeType | undefined {
-        const type = this.getEdgeTypes().find((type) => type.getId() === id);
+        const type = this.getEdgeTypes().find((type) => type.getId() == id);
         if (type == undefined) {
             const graphType = this.getGraphNodes().find((node) => node.getEdgeTypeById(id) != undefined);
             if (graphType == undefined) {
@@ -252,26 +253,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         const graphNodes = this.getGraphNodes();
         const graphEdges = graphNodes.map((val) => val.getDeepEdges()).reduce((prev, curr) => prev.concat(curr), []);
         return this.edges.concat(graphEdges);
-    }
-
-    private stringifyCensor(censor: any) {
-        var i = 0;
-    
-        return function(key: any, value: any) {
-            if (i !== 0 && typeof(censor) === 'object' && (key == 'parent' || key == 'incomingEdges' || key == 'outgoingEdges')) 
-                return '[Ignore]';
-            if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
-                return '[Circular]'; 
-            if(i >= 999) 
-                return '[Unknown]';
-            ++i; 
-    
-            return value;  
-        }
-    }
-    
-    public toString(): string {
-        return JSON.stringify(this, this.stringifyCensor(this), 2);
     }
 
     public getHighestPriority(): number {
@@ -400,6 +381,24 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         externalSourceEdges.forEach((val) => { val.setTargetNode(primaryNode); });
         externalTargetEdges.forEach((val) => { val.setSourceNode(primaryNode); });
     }
+    
+    public getTransformationConfiguration(): TransformationConfiguration {
+        return this.transformationConfiguration;
+    }
+    
+    public setTransformationConfiguration(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
+        this.transformationConfiguration.set(edgeType, processor);
+    }
+    
+    public setTransformationConfigurationById(edgeTypeId: string, processor: typeof TransformationProcessor): void {
+        const edgeType = new EdgeType(edgeTypeId);
+        
+        if (edgeType == undefined) {
+            throw new Error(`EdgeType with id ${edgeTypeId} does not exist.`);
+        }
+        
+        this.setTransformationConfiguration(edgeType, processor);
+    }
 
     public equals(graph: IHGraph): boolean {
         // A graph is equal to another graph or clique if all nodes (ids), edge types, and edges are the same.
@@ -441,21 +440,72 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         return true;
     }
 
-    public getTransformationConfiguration(): TransformationConfiguration {
-        return this.transformationConfiguration;
+    private stringifyCensor(censor: any): (key: any, value: any) => string {
+        var i = 0;
+    
+        return function(key: any, value: any): string {
+            if (i !== 0 && typeof(censor) === 'object' && (key == 'parent' || key == 'incomingEdges' || key == 'outgoingEdges')) 
+                return '[Ignore]';
+            if(i !== 0 && typeof(censor) === 'object' && typeof(value) == 'object' && censor == value) 
+                return '[Circular]'; 
+                if(i >= 999) 
+                return '[Unknown]';
+            ++i; 
+    
+            return value;  
+        }
+    }
+    
+    public toStringDebug(): string {
+        return JSON.stringify(this, this.stringifyCensor(this), 2);
     }
 
-    public setTransformationConfiguration(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
-        this.transformationConfiguration.set(edgeType, processor);
-    }
+    public serialize(): string {
+        const factoryObject: { 
+            nodes: SourceNodeFactoryType[], 
+            edgeTypes: EdgeTypeFactoryType[],
+            edges: EdgeFactoryType[]
+        } = {
+            nodes: [],
+            edgeTypes: [],
+            edges: []
+        };
+        let idCounter = 0;
+        const nodeMapping = new Map<IHNode, string>();
 
-    public setTransformationConfigurationById(edgeTypeId: string, processor: typeof TransformationProcessor): void {
-        const edgeType = new EdgeType(edgeTypeId);
-        
-        if (edgeType == undefined) {
-            throw new Error(`EdgeType with id ${edgeTypeId} does not exist.`);
+        for (const node of this.getNodes()) {
+            if (node instanceof SourceNode) {
+                const nodeId = node.getId() ? node.getId() : `id${idCounter++}`
+                nodeMapping.set(node, nodeId);
+                const nodeObject: SourceNodeFactoryType = { 
+                    id: nodeId,
+                    content: node.getContent() 
+                };
+                factoryObject.nodes.push(nodeObject);
+            } else {
+                // To implement, IHGraph
+            }
         }
         
-        this.setTransformationConfiguration(edgeType, processor);
+        for (const edgeType of this.getEdgeTypes()) {
+            const edgeTypeObject: EdgeTypeFactoryType = {
+                id: edgeType.getId()!,
+                priority: edgeType.getPriority(),
+                immediate: edgeType.isImmediate()
+            };
+            factoryObject.edgeTypes.push(edgeTypeObject);
+        }
+
+        for (const edge of this.getEdges()) {
+            const edgeObject: EdgeFactoryType = {
+                edgeType: edge.getType().getId()!,
+                sourceNode: nodeMapping.get(edge.getSourceNode())!,
+                targetNode: nodeMapping.get(edge.getTargetNode())!
+            };
+            factoryObject.edges.push(edgeObject);
+        }
+
+        return JSON.stringify(factoryObject);
     }
+
 }
