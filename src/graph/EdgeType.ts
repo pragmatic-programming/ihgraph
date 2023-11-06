@@ -30,6 +30,7 @@ export class EdgeType extends NamedElement {
     public clone(): EdgeType {
         const newType = new EdgeType(this.getId()!, this.priority);
         newType.setImmediate(this.immediate);
+        this.cloneAnnotationsTo(newType);
         return newType;
     }
     

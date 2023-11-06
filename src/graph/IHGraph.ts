@@ -117,8 +117,11 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             }
 
             const edgeClone = clone.createTransformationEdge(type, sourceNode, targetNode);
+            edge.cloneAnnotationsTo(edgeClone);
             edgeMapping.set(edge, edgeClone);
         }, this);
+
+        this.cloneAnnotationsTo(clone);
 
         clone.transformationConfiguration = this.transformationConfiguration;
 

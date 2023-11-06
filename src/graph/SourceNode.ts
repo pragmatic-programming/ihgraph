@@ -47,6 +47,7 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         const clone = new SourceNode(parent ? parent : this.parent, this.id);
         clone.content = this.content;
         clone.status = this.status;
+        this.cloneAnnotationsTo(clone);
         return clone;
     }
 

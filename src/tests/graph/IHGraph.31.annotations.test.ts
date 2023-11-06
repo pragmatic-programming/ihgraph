@@ -208,3 +208,86 @@ test("createIHGraphAnnotation10SerializationEdge", () => {
     expect(factoryEdge.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
     expect(factoryEdge.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
 });
+
+test("createIHGraphAnnotation11CloneGraph", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    graph.createAnnotation("testAnnotationString", "First Annotation");
+    graph.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const clone = graph.clone();
+
+    expect(clone).toBeDefined();
+    expect(clone.equals(graph)).toBeTruthy();
+    expect(clone.annotations).toBeDefined();
+    expect(clone.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(clone.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
+
+test("createIHGraphAnnotation12CloneNode", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    const node = graph.getNodes()[0];
+
+    node.createAnnotation("testAnnotationString", "First Annotation");
+    node.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const clone = graph.clone();
+
+    expect(clone).toBeDefined();
+
+    const cloneNode = clone.getNodes()[0];
+
+    expect(cloneNode).toBeDefined();
+    expect(cloneNode.annotations).toBeDefined();
+    expect(cloneNode.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(cloneNode.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
+
+test("createIHGraphAnnotation13CloneEdgeType", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    const edgeType = graph.getEdgeTypes()[0];
+
+    edgeType.createAnnotation("testAnnotationString", "First Annotation");
+    edgeType.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const clone = graph.clone();
+
+    expect(clone).toBeDefined();
+
+    const cloneEdgeType = clone.getEdgeTypes()[0];
+
+    expect(cloneEdgeType).toBeDefined();
+    expect(cloneEdgeType.annotations).toBeDefined();
+    expect(cloneEdgeType.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(cloneEdgeType.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
+
+test("createIHGraphAnnotation14CloneEdge", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    const edge = graph.getEdges()[0];
+
+    edge.createAnnotation("testAnnotationString", "First Annotation");
+    edge.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const clone = graph.clone();
+
+    expect(clone).toBeDefined();
+
+    const cloneEdge = clone.getEdges()[0];
+
+    expect(cloneEdge).toBeDefined();
+    expect(cloneEdge.annotations).toBeDefined();
+    expect(cloneEdge.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(cloneEdge.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
