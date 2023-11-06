@@ -32,7 +32,11 @@ export class EdgeType extends NamedElement {
         newType.setImmediate(this.immediate);
         return newType;
     }
-
+    
+    getId(): string {
+        return this.id!;
+    }
+    
     public getPriority(): number {
         return this.priority;
     }
@@ -48,4 +52,5 @@ export class EdgeType extends NamedElement {
     public setImmediate(immediate: boolean): void {
         this.immediate = immediate;
     }
+
 }

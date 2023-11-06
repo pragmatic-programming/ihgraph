@@ -14,15 +14,51 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export class Annotatable {
-    protected annotations: { [key: string]: any } = {};
+import { Annotation } from "./Annotation";
 
-    getAnnotations(): { [key: string]: any } {
-        return this.annotations;
+export class Annotatable {
+
+    public annotations: { [key: string]: any } = {};
+
+    public createAnnotation<T>(id: string, data: T): Annotation<T> {
+        if (this.hasAnnotation(id)) {
+            const annotation = this.getAnnotation(id)!
+            annotation.data = data;
+            return this.getAnnotation(id)!;
+        } else {
+            const annotation = this.createNewAnnotation(id, data, this) as Annotation<T>;
+            this.setAnnotation(annotation);
+            return annotation;
+        }
     }
 
-    setAnnotations(annotations: { [key: string]: any }): void {
-        this.annotations = annotations;
+    public createNewAnnotation<T>(id: string, data: T, parent : Annotatable | undefined = undefined): Annotation<T> {
+        return new Annotation<T>(id, data, parent);
+    }
+
+    public setAnnotation<T>(annotation: Annotation<T>): void {
+        this.annotations[annotation.id] =  annotation;
+    }
+
+    public hasAnnotation(id: string): boolean {
+        return this.annotations[id] != undefined;
+    }
+
+    public getAnnotation<T>(id: string): Annotation<T> | undefined {
+        return this.annotations[id];
+    }
+
+    public getAnnotationData<T>(id: string): T {
+        if (!this.hasAnnotation(id)) {
+            throw new Error(`Annotation ${id} does not exist`);
+        }
+        return this.annotations[id].data as T;
+    }
+
+    public getData<T>(annotation: Annotation<T>): T {
+        if (this.annotations[annotation.id] == undefined) {
+            throw new Error(`Annotation ${annotation.id} does not exist`);
+        }
+        return this.annotations[annotation.id].data;
     }
 }
-
