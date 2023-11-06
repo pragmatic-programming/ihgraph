@@ -22,7 +22,7 @@ import { SourceNode } from "./SourceNode";
 import { TransformationEdge } from "./TransformationEdge";
 import { TransformationConfiguration } from "./TransformationConfiguration";
 import { TransformationProcessor } from "./TransformationProcessor";
-import { EdgeFactoryType, EdgeTypeFactoryType, SourceNodeFactoryType } from "./IHFactory";
+import { AnnotationFactoryType, EdgeFactoryClass, EdgeTypeFactoryClass, FactoryObjectClass, SourceNodeFactoryClass } from "./IHFactory";
 
 export type IHNode = SourceNode | IHGraph;
 
@@ -460,27 +460,23 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         return JSON.stringify(this, this.stringifyCensor(this), 2);
     }
 
-    public serialize(): string {
-        const factoryObject: { 
-            nodes: SourceNodeFactoryType[], 
-            edgeTypes: EdgeTypeFactoryType[],
-            edges: EdgeFactoryType[]
-        } = {
-            nodes: [],
-            edgeTypes: [],
-            edges: []
-        };
+    public serialize(includeAnnotations: boolean = false): string {
+        const factoryObject: FactoryObjectClass = new FactoryObjectClass();
         let idCounter = 0;
         const nodeMapping = new Map<IHNode, string>();
+
+        if (includeAnnotations) {
+            this.cloneAnnotationsTo(factoryObject);   
+        }
 
         for (const node of this.getNodes()) {
             if (node instanceof SourceNode) {
                 const nodeId = node.getId() ? node.getId() : `id${idCounter++}`
                 nodeMapping.set(node, nodeId);
-                const nodeObject: SourceNodeFactoryType = { 
-                    id: nodeId,
-                    content: node.getContent() 
-                };
+                const nodeObject: SourceNodeFactoryClass = new SourceNodeFactoryClass(nodeId, node.getContent())
+                if (includeAnnotations) {
+                    node.cloneAnnotationsTo(nodeObject);
+                }
                 factoryObject.nodes.push(nodeObject);
             } else {
                 // To implement, IHGraph
@@ -488,20 +484,18 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         }
         
         for (const edgeType of this.getEdgeTypes()) {
-            const edgeTypeObject: EdgeTypeFactoryType = {
-                id: edgeType.getId()!,
-                priority: edgeType.getPriority(),
-                immediate: edgeType.isImmediate()
-            };
+            const edgeTypeObject: EdgeTypeFactoryClass = new EdgeTypeFactoryClass(edgeType.getId(), edgeType.getPriority(), edgeType.isImmediate()); 
+            if (includeAnnotations) {
+                edgeType.cloneAnnotationsTo(edgeTypeObject);              
+            }
             factoryObject.edgeTypes.push(edgeTypeObject);
         }
 
         for (const edge of this.getEdges()) {
-            const edgeObject: EdgeFactoryType = {
-                edgeType: edge.getType().getId()!,
-                sourceNode: nodeMapping.get(edge.getSourceNode())!,
-                targetNode: nodeMapping.get(edge.getTargetNode())!
-            };
+            const edgeObject: EdgeFactoryClass = new EdgeFactoryClass(edge.getType().getId(), nodeMapping.get(edge.getSourceNode())!, nodeMapping.get(edge.getTargetNode())!);
+            if (includeAnnotations) {
+                edge.cloneAnnotationsTo(edgeObject);
+            }
             factoryObject.edges.push(edgeObject);
         }
 

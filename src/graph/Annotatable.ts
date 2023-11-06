@@ -61,4 +61,11 @@ export class Annotatable {
         }
         return this.annotations[annotation.id].data;
     }
+
+    public cloneAnnotationsTo(annotatable: Annotatable): void {
+        for (const [key, value] of Object.entries(this.annotations)) {
+            const annotation = annotatable.createAnnotation(key, value.data);
+            delete annotation.parent;
+        }
+    }
 }

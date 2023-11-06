@@ -19,7 +19,7 @@ import { Annotatable } from "./Annotatable";
 export class Annotation<T> {
     id: string;
     data: T;
-    parent: Annotatable | undefined;
+    parent?: Annotatable | undefined;
 
     constructor(id: string, data: T, parent: Annotatable | undefined = undefined) {
         this.id = id
@@ -37,4 +37,5 @@ export class Annotation<T> {
     public get(): T | undefined {
         return this.data;
     }
+
 }

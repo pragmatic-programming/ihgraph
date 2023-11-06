@@ -105,3 +105,106 @@ test("createIHGraphAnnotation06Multiple", () => {
     expect(graph.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
     expect(graph.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
 });
+
+test("createIHGraphAnnotation07SerializationGraph", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    graph.createAnnotation("testAnnotationString", "First Annotation");
+    graph.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const serialization = graph.serialize(true);
+
+    expect(serialization).toBeDefined();
+    expect(serialization).not.toBeNull();
+
+    const factoryGraph = createIHGraphFromJSONString(serialization);
+
+    expect(factoryGraph).toBeDefined();
+    expect(factoryGraph.equals(graph)).toBeTruthy();
+    expect(factoryGraph.annotations).toBeDefined();
+    expect(factoryGraph.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(factoryGraph.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
+
+test("createIHGraphAnnotation08SerializationNode", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    const node = graph.getNodes()[0];
+
+    node.createAnnotation("testAnnotationString", "First Annotation");
+    node.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const serialization = graph.serialize(true);
+
+    expect(serialization).toBeDefined();
+    expect(serialization).not.toBeNull();
+
+    const factoryGraph = createIHGraphFromJSONString(serialization);
+
+    expect(factoryGraph).toBeDefined();
+
+    const factoryNode = factoryGraph.getNodes()[0];
+
+    expect(factoryNode).toBeDefined();
+    expect(factoryNode.annotations).toBeDefined();
+    expect(factoryNode.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(factoryNode.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
+
+test("createIHGraphAnnotation09SerializationEdgeType", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    const edgeType = graph.getEdgeTypes()[0];
+
+    edgeType.createAnnotation("testAnnotationString", "First Annotation");
+    edgeType.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const serialization = graph.serialize(true);
+
+    expect(serialization).toBeDefined();
+    expect(serialization).not.toBeNull();
+
+    const factoryGraph = createIHGraphFromJSONString(serialization);
+
+    expect(factoryGraph).toBeDefined();
+
+    const factoryEdgeType = factoryGraph.getEdgeTypes()[0];
+
+    expect(factoryEdgeType).toBeDefined();
+    expect(factoryEdgeType.annotations).toBeDefined();
+    expect(factoryEdgeType.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(factoryEdgeType.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
+
+test("createIHGraphAnnotation10SerializationEdge", () => {
+    const graph = testGraphDemo01();
+
+    expect(graph).toBeDefined();
+
+    const edge = graph.getEdges()[0];
+
+    edge.createAnnotation("testAnnotationString", "First Annotation");
+    edge.createAnnotation("testAnnotationObject", {x: 100, y: 200});
+
+    const serialization = graph.serialize(true);
+
+    expect(serialization).toBeDefined();
+    expect(serialization).not.toBeNull();
+
+    const factoryGraph = createIHGraphFromJSONString(serialization);
+
+    expect(factoryGraph).toBeDefined();
+
+    const factoryEdge = factoryGraph.getEdges()[0];
+
+    expect(factoryEdge).toBeDefined();
+    expect(factoryEdge.annotations).toBeDefined();
+    expect(factoryEdge.getAnnotationData<string>("testAnnotationString")).toBe("First Annotation");
+    expect(factoryEdge.getAnnotationData<NewData>("testAnnotationObject")).toEqual({x: 100, y: 200});
+});
