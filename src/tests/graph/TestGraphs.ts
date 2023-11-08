@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { createIHGraphFromJSON } from "../../graph/IHFactory";
+import { IHGraphFactoryInterface, createIHGraphFromJSON } from "../../graph/IHFactory";
 import { IHGraph } from "../../graph/IHGraph";
 
 export function testGraphSimple(): IHGraph {
@@ -29,9 +29,9 @@ export function testGraphSimple(): IHGraph {
 }
 
 export function testGraphDemo01(): IHGraph {
-    const graph = 
+    const graph: IHGraphFactoryInterface = 
     {
-        "nodes": [
+        nodes: [
             {
                 id: "Defines"
             },
@@ -42,13 +42,13 @@ export function testGraphDemo01(): IHGraph {
                 id: "Loop"
             }
         ],
-        "edgeTypes": [
+        edgeTypes: [
             {
                 id: "Sequence",
                 priority: 1
             }
         ],
-        "edges": [
+        edges: [
             {
                 edgeType: "Sequence",
                 sourceNode: "Defines",
@@ -69,8 +69,8 @@ export function testGraphDemo01(): IHGraph {
 
 
 export function testGraphDemo02(): IHGraph {
-    const graph = {
-        "nodes": [
+    const graph: IHGraphFactoryInterface = {
+        nodes: [
             {
                 id: "Define",
                 content: "var x = 1;"
@@ -84,7 +84,7 @@ export function testGraphDemo02(): IHGraph {
                 content: ""
             }
         ],
-        "edgeTypes": [
+        edgeTypes: [
             {
                 id: "Sequence",
                 priority: 8
@@ -94,7 +94,7 @@ export function testGraphDemo02(): IHGraph {
                 priority: 2
             }
         ],
-        "edges": [
+        edges: [
             {
                 edgeType: "Sequence",
                 sourceNode: "Define",

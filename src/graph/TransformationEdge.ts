@@ -17,7 +17,7 @@
 import { Annotatable } from "./Annotatable";
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
-import { SourceNode } from "./SourceNode";
+import { SourceNode } from "./SourceNode";   
 
 export class TransformationEdge extends Annotatable {
     protected parent : IHNode;

@@ -17,8 +17,35 @@
 import { Annotatable } from "./Annotatable";
 import { Annotation } from "./Annotation";
 import { IHGraph } from "./IHGraph";
+import { SourceNodeContent } from "./SourceNode";
 
 export type AnnotationFactoryType = {[key: string]: any};
+
+export interface SourceNodeInterface {
+    id: string
+    content?: SourceNodeContent
+    annotations?: AnnotationFactoryType
+}
+
+export interface EdgeTypeInterface {
+    id: string
+    priority?: number
+    immediate?: boolean
+}
+
+export interface EdgeInterface {
+    edgeType: string
+    sourceNode: string
+    targetNode: string
+    annotations?: AnnotationFactoryType
+}
+
+export interface IHGraphFactoryInterface {
+    nodes: SourceNodeInterface[];
+    edgeTypes: EdgeTypeInterface[];
+    edges: EdgeInterface[];
+    annotations?: AnnotationFactoryType;
+}
 
 export class SourceNodeFactoryClass extends Annotatable {
     id: string = "";

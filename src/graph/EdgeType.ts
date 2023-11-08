@@ -17,8 +17,9 @@
 import { NamedElement } from "./NamedElement";
 
 export class EdgeType extends NamedElement {
-    private priority: number;
-    private immediate: boolean;
+    id: string;
+    priority: number;
+    immediate: boolean;
 
     constructor(id: string, priority: number = 0) {
         super(id);
