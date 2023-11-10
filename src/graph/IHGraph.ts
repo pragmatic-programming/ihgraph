@@ -384,6 +384,21 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         externalSourceEdges.forEach((val) => { val.setTargetNode(primaryNode); });
         externalTargetEdges.forEach((val) => { val.setSourceNode(primaryNode); });
     }
+
+    public getImmediateCliques(): IHGraph[] {
+        const cliques: IHGraph[] = [];
+        const nodes = this.getDeepNodes();
+
+        nodes.forEach((node) => {
+            const edgeTypes = node.getOutgoingEdges().map((val) => val.getType()).filter((val) => val.isImmediate());
+            new Set(edgeTypes).forEach((type) => {
+                const clique = this.getClique(node, type);
+                cliques.push(clique);
+            });
+        });
+
+        return cliques;
+    }
     
     public getTransformationConfiguration(): TransformationConfiguration {
         return this.transformationConfiguration;

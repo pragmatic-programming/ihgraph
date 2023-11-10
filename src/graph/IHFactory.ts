@@ -115,6 +115,9 @@ export function createIHGraphFromJSONString(json: string) {
     // create edge types
     for (const edgeType of parsedJSON.edgeTypes) {
         const edgeTypeObject = ihGraph.createEdgeType(edgeType.id, edgeType.priority);
+        if (edgeType.immediate) {
+            edgeTypeObject.setImmediate(true);
+        }
         if (edgeType.annotations) {
             for (const [id, data] of Object.entries(edgeType.annotations)) {
                 edgeTypeObject.createAnnotation(id, (data as Annotation<any>)["data"]);
