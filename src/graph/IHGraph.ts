@@ -297,10 +297,14 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
             visited.push(curr);
 
-            const edges = this.getDeepEdges().filter((val) => val.getType() === edgeType);
+            const outgoingEdges = curr.getOutgoingEdges().filter((val) => val.getType() === edgeType);
+            const incomingEdges = curr.getIncomingEdges().filter((val) => val.getType() === edgeType);
 
-            edges.forEach((val) => {
+            outgoingEdges.forEach((val) => {
                 queue.push(val.getTargetNode());
+            });
+            incomingEdges.forEach((val) => {
+                queue.push(val.getSourceNode());
             });
         }
 
@@ -392,8 +396,11 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         nodes.forEach((node) => {
             const edgeTypes = node.getOutgoingEdges().map((val) => val.getType()).filter((val) => val.isImmediate());
             new Set(edgeTypes).forEach((type) => {
-                const clique = this.getClique(node, type);
-                cliques.push(clique);
+                if (!cliques.some((val) => val.getEdgeTypes().includes(type) &&
+                    val.getDeepNodes().includes(node))) {
+                    const clique = this.getClique(node, type);
+                    cliques.push(clique);
+                }
             });
         });
 

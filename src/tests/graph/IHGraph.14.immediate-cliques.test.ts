@@ -15,7 +15,7 @@
  ********************************************************************************/
 
 import exp = require("constants");
-import { testGraphDemo03SCCharts } from "./TestGraphs";
+import { testGraphDemo03SCCharts, testGraphDemo04WYTIWYGSum } from "./TestGraphs";
 
 test("getImmediateClique", () => {
     const graph = testGraphDemo03SCCharts();
@@ -48,4 +48,16 @@ test("getImmediateCliqueMixed", () => {
     expect(nextClique).toBeDefined();
     expect(nextClique.getNodes().length).toBe(2);
     expect(nextClique.getEdges()[0].getType().id).toBe("SCCharts");
+})
+
+test("getImmediateCliqueMultipleEdges", () => {
+    const graph = testGraphDemo04WYTIWYGSum();
+
+    expect(graph).toBeDefined();
+
+    const immediateClique = graph.getImmediateCliques();
+
+    expect(immediateClique).toBeDefined();
+    expect(immediateClique.length).toBe(1);
+    expect(immediateClique[0].getNodes().length).toBe(4);
 })
