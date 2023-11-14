@@ -14,12 +14,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+import { EdgeTypeFactoryClass } from "./IHFactory";
 import { NamedElement } from "./NamedElement";
+
+// Controlflow transformation direction transforms from source to target nodes.
+// Dependency transformation direction transforms from target to source nodes.
+export enum TransformationDirection {
+    CONTROLFLOW, 
+    DEPENDENCY
+}
 
 export class EdgeType extends NamedElement {
     id: string;
     priority: number;
     immediate: boolean;
+    transformationDirection: TransformationDirection = TransformationDirection.CONTROLFLOW;
 
     constructor(id: string, priority: number = 0) {
         super(id);
@@ -31,6 +40,7 @@ export class EdgeType extends NamedElement {
     public clone(): EdgeType {
         const newType = new EdgeType(this.getId()!, this.priority);
         newType.setImmediate(this.immediate);
+        newType.setTransformationDirection(this.transformationDirection);
         this.cloneAnnotationsTo(newType);
         return newType;
     }
@@ -43,16 +53,27 @@ export class EdgeType extends NamedElement {
         return this.priority;
     }
 
-    public setPriority(priority: number): void {
+    public setPriority(priority: number): EdgeType {
         this.priority = priority;
+        return this;
     }
 
     public isImmediate(): boolean {
         return this.immediate;
     }
 
-    public setImmediate(immediate: boolean): void {
+    public setImmediate(immediate: boolean): EdgeType {
         this.immediate = immediate;
+        return this;
+    }
+
+    public getTransformationDirection(): TransformationDirection {
+        return this.transformationDirection;
+    }
+
+    public setTransformationDirection(transformationDirection: TransformationDirection): EdgeTypeFactoryClass {
+        this.transformationDirection = transformationDirection;
+        return this;
     }
 
 }
