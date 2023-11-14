@@ -18,7 +18,18 @@ import * as kico from "kico";
 import { IHGraph } from "./IHGraph";
 import { SourceNode } from "./SourceNode";
 
+// Controlflow transformation direction transforms from source to target nodes.
+// Dependency transformation direction transforms from target to source nodes.
+export enum TransformationDirection {
+    CONTROLFLOW, 
+    DEPENDENCY
+}
+
 export class TransformationProcessor extends kico.Processor<IHGraph, IHGraph> {
+
+    public getTransformationDirection(): TransformationDirection {
+        return TransformationDirection.CONTROLFLOW;
+    }
 
     public createSingleResultNode(id: string): SourceNode {
         const targetGraph = new IHGraph();

@@ -373,20 +373,46 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     public replaceClique(clique: IHGraph, replacement: IHGraph): void {
         // Replace the old clique by a new one and re-route all edges from outside the clique to the new one.
         // If the new clique only contains one node, all edges will be re-routed to the node.
+        // If there exist a node with the same id as the original node, this node will be the target.
         // Otherwise, they will lead to the first node.
 
         const cliqueNodesIds = clique.getDeepNodes().map((val) => val.getId());
         const externalSourceEdges = this.edges.filter((val) => 
-            !cliqueNodesIds.includes(val.getSourceNode().getId()) && cliqueNodesIds.includes(val.getTargetNode().getId()));
+            !cliqueNodesIds.includes(val.getSourceNode().getId()) && 
+            cliqueNodesIds.includes(val.getTargetNode().getId()));
         const externalTargetEdges = this.edges.filter((val) =>
-            !cliqueNodesIds.includes(val.getTargetNode().getId()) && cliqueNodesIds.includes(val.getSourceNode().getId()));
+            !cliqueNodesIds.includes(val.getTargetNode().getId()) && 
+            cliqueNodesIds.includes(val.getSourceNode().getId()));
+
+        const primaryNode = replacement.nodes[0];
+        const replacementIds = replacement.getDeepNodes().map((val) => val.getId());
+        const sourceEdgesTargets = new Map<TransformationEdge, IHNode>();
+        externalSourceEdges.forEach((val) => {
+            const id: string = val.getTargetNode().getId()!; 
+            if (replacementIds.includes(id)) { 
+                sourceEdgesTargets.set(val, replacement.getNodeById(id)!); 
+            } else { 
+                sourceEdgesTargets.set(val, primaryNode); 
+            }
+        });  
+        const targetEdgesSources = new Map<TransformationEdge, IHNode>();
+        externalTargetEdges.forEach((val) => { 
+            const id: string = val.getSourceNode().getId()!; 
+            if (replacementIds.includes(id)) { 
+                targetEdgesSources.set(val, replacement.getNodeById(id)!); 
+            } else { 
+                targetEdgesSources.set(val, primaryNode); 
+            }
+        });
 
         this.removeClique(clique);
-        this.addClique(replacement);
-        const primaryNode = replacement.nodes[0];
 
-        externalSourceEdges.forEach((val) => { val.setTargetNode(primaryNode); });
-        externalTargetEdges.forEach((val) => { val.setSourceNode(primaryNode); });
+        if (replacement.getDeepNodes().length < 1) return;
+
+        this.addClique(replacement);
+
+        externalSourceEdges.forEach((val) => { val.setTargetNode(sourceEdgesTargets.get(val)!); });
+        externalTargetEdges.forEach((val) => { val.setSourceNode(targetEdgesSources.get(val)!); });
     }
 
     public getImmediateCliques(): IHGraph[] {
