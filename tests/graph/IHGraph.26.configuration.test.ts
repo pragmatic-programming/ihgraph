@@ -14,10 +14,9 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import * as kico from "kico";
-import { IHGraph } from "../../graph/IHGraph";
-import { EdgeType } from "../../graph/EdgeType";
-import { TransformationProcessor } from "../../graph/TransformationProcessor";
+import { IHGraph } from "../../src/IHGraph";
+import { EdgeType } from "../../src/EdgeType";
+import { TransformationProcessor } from "../../src/TransformationProcessor";
 
 function testGraphSimple(): IHGraph {
     const thGraph = new IHGraph();

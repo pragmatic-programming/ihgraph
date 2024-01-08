@@ -14,8 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { IHGraphFactoryInterface, createIHGraphFromJSON } from "../../graph/IHFactory";
-import { IHGraph } from "../../graph/IHGraph";
+import { IHGraphFactoryInterface, createIHGraphFromJSON } from "../../src/IHFactory";
+import { IHGraph } from "../../src/IHGraph";
 
 export function testGraphSimple(): IHGraph {
     const thGraph = new IHGraph();

@@ -14,11 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { create } from "mock-fs/lib/filesystem";
-import { IHGraph } from "../../graph/IHGraph";
 import { testGraphDemo01 } from "./TestGraphs";
-import { createIHGraphFromJSONString } from "../../graph/IHFactory";
-import exp = require("constants");
+import { createIHGraphFromJSONString } from "../../src/IHFactory";
 
 test("createIHGraphAnnotation01Primitives", () => {
     const graph = testGraphDemo01();

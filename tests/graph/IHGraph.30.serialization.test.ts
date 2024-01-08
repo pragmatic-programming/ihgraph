@@ -14,23 +14,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { IHGraph } from "../../graph/IHGraph";
-import { testGraphDemo02 } from "./TestGraphs";
+import { testGraphDemo01 } from "./TestGraphs";
+import { createIHGraphFromJSONString } from "../../src/IHFactory";
 
-test("removeEdge", () => {
-    const graph = testGraphDemo02();
+test("createIHGraphSerialization01", () => {
+    const graph = testGraphDemo01();
 
     expect(graph).toBeDefined();
-    expect(graph.getEdges().length).toBe(2);
-    expect(graph.getDeepEdges().length).toBe(2);
 
-    const edge = graph.getEdges()[0];
-    graph.removeEdge(edge);
+    const serialization = graph.serialize();
 
-    expect(graph.getEdges().length).toBe(1);
-    expect(graph.getDeepEdges().length).toBe(1);
-    
-    const graphClone = graph.clone();
+    expect(serialization).toBeDefined();
+    expect(serialization).not.toBeNull();
 
-    expect(graphClone).toBeDefined();
+    const factoryGraph = createIHGraphFromJSONString(serialization);
+
+    expect(factoryGraph).toBeDefined();
+    expect(factoryGraph.equals(graph)).toBeTruthy();
 });
