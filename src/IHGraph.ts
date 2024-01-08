@@ -363,7 +363,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         });
     }
 
-    public replaceClique(clique: IHGraph, replacement: IHGraph): void {
+    public replaceClique(clique: IHGraph, replacement: IHGraph, addCliqueNodes: boolean = true): void {
         // Replace the old clique by a new one and re-route all edges from outside the clique to the new one.
         // If the new clique only contains one node, all edges will be re-routed to the node.
         // If there exist a node with the same id as the original node, this node will be the target.
@@ -402,7 +402,9 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
         if (replacement.getDeepNodes().length < 1) return;
 
-        this.addClique(replacement);
+        if (addCliqueNodes) {
+            this.addClique(replacement);
+        }
 
         externalSourceEdges.forEach((val) => { val.setTargetNode(sourceEdgesTargets.get(val)!); });
         externalTargetEdges.forEach((val) => { val.setSourceNode(targetEdgesSources.get(val)!); });
@@ -427,6 +429,39 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     }
 
 
+
+    /****************************************
+     * 
+     * Induced Hierarchies
+     * 
+     */
+
+    public getInducedHierarchy(maxIterations : number = 100): IHGraph {
+        let graph = this.clone();
+
+        let i = 0;
+
+        // If there are at least two different edge types from edges of all source nodes, induce a hierarchy.
+        // Otherwise, return the graph itself.
+        while (true) {
+            const sourceNodeEdges = graph.getSourceNodeEdges();
+            const edgeTypes = new Set(sourceNodeEdges.map((val) => val.getType()));
+            if (edgeTypes.size < 2) {
+                return graph;
+            }
+        
+            const clique = graph.getNextClique();
+            const cliqueGraph = clique.clone();
+            graph.replaceClique(clique, cliqueGraph, false);
+            graph.nodes.push(cliqueGraph);
+
+            i++;
+            if (i > maxIterations) {
+                throw Error("Maximum number of induced hierarchies reached!");
+            }
+        }
+    }
+    
 
 
     /****************************************
