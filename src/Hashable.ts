@@ -14,13 +14,29 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { TransformationEdge } from "./TransformationEdge";
+export class Hashable {
+    protected static objectIdMap = new WeakMap<Hashable, string>();
+    protected static objectCount = 0x100 // ORG 100h;
+    
+    constructor() {
+    }
 
-export interface EdgeReceiver {
-    getOutgoingEdges(): TransformationEdge[];
-    getIncomingEdges(): TransformationEdge[];
-    addOutgoingEdge(edge: TransformationEdge): void;
-    addIncomingEdge(edge: TransformationEdge): void;
-    removeIncomingEdge(edge: TransformationEdge): void;
-    removeOutgoingEdge(edge: TransformationEdge): void;
+    hashCode(): number {
+        if (!Hashable.objectIdMap.has(this)) {
+            Hashable.objectIdMap.set(this, `${++Hashable.objectCount}`);
+        }
+        
+        let h: number = 0;
+        let s: string = Hashable.objectIdMap.get(this)!;
+
+        for (var i = 0; i < s.length; i++) {
+            h = 31 * h + s.charCodeAt(i);
+        }
+
+        return h & 0xFFFFFFFF
+    }    
+
+    getHashCode(): string { 
+        return `0x${this.hashCode().toString(16).padStart(8, '0')}`;
+    }
 }

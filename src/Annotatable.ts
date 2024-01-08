@@ -15,8 +15,9 @@
  ********************************************************************************/
 
 import { Annotation } from "./Annotation";
+import { Hashable } from "./Hashable";
 
-export class Annotatable {
+export class Annotatable extends Hashable {
 
     public annotations: { [key: string]: any } = {};
 
@@ -67,5 +68,13 @@ export class Annotatable {
             const annotation = annotatable.createAnnotation(key, value.data);
             delete annotation.parent;
         }
+    }
+
+    public clearAnnotations(): void {
+        this.annotations = {};
+    }
+
+    public cloneTo(target: Annotatable): void {
+        this.cloneAnnotationsTo(target);
     }
 }

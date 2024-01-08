@@ -109,8 +109,15 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     public getDeepNodes(): IHNode[] {
         const graphNodes = this.getGraphNodes();
         const graphNodesDeep = graphNodes.map((val) => val.getDeepNodes()).reduce((prev, curr) => prev.concat(curr), []);
+        return this.getNodes().concat(graphNodesDeep);
+    }
+
+    public getDeepSourceNodes(): IHNode[] {
+        const graphNodes = this.getGraphNodes();
+        const graphNodesDeep = graphNodes.map((val) => val.getDeepSourceNodes()).reduce((prev, curr) => prev.concat(curr), []);
         return (this.getSourceNodes() as IHNode[]).concat(graphNodesDeep);
     }
+
 
     public getRootNodes(): SourceNode[] {
         return this.getSourceNodes().filter((node) => node.getIncomingEdges().length === 0);
@@ -120,27 +127,32 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         return this.getSourceNodes().filter((node) => node.getOutgoingEdges().length === 0);
     }
 
-    public getNodeById(id: string): SourceNode | undefined {
-        const sourceNode = this.getSourceNodes().find((node) => node.getId() === id);
-        if (sourceNode == undefined) {
-            const graphNode = this.getGraphNodes().find((node) => node.getNodeById(id) != undefined);
-            if (graphNode == undefined) {
+    public getNodeById(id: string): IHNode | undefined {
+        const shallowNode = this.getNodes().find((node) => node.getId() === id);
+        if (shallowNode == undefined) {
+            const graphNodes = this.getGraphNodes();
+            if (graphNodes.length < 1) {
                 return undefined;
+            } else {
+                const graphNode = graphNodes.find((node) => node.getNodeById(id) != undefined);
+                if (graphNode == undefined) {
+                    return undefined;
+                }
+                return graphNode.getNodeById(id);
             }
-            return graphNode.getNodeById(id);
         }
 
-        return sourceNode
+        return shallowNode;
     }
 
-    public getHighestPriorityNode(): IHNode {
-        const edges = this.getDeepEdges();
+    public getHighestPriorityShallowNode(): IHNode {
+        const edges = this.getEdges();
 
         if (edges.length < 1) {
             throw Error("There are no transformation edges!");
         }
 
-        const prio = this.getHighestPriority();
+        const prio = this.getHighestShallowPriority();
 
         return edges.filter((val) => val.getType().getPriority() === prio)[0].getSourceNode();
     }
@@ -206,6 +218,14 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         this.incomingEdges.push(edge);
     }
 
+    public removeIncomingEdge(edge: TransformationEdge): void {
+        this.incomingEdges = this.incomingEdges.filter((e) => e !== edge);
+    }
+
+    public removeOutgoingEdge(edge: TransformationEdge): void {
+        this.outgoingEdges = this.outgoingEdges.filter((e) => e !== edge);
+    }
+
     public removeEdge(edge: TransformationEdge): void {
         const index = this.edges.indexOf(edge);
         if (index > -1) {
@@ -254,7 +274,17 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         this.edgeTypes.push(edgeType);
     }
 
-    public getHighestPriority(): number {
+    public getHighestShallowPriority(): number {
+        const edges = this.getEdges();
+
+        if (edges.length < 1) {
+            throw Error("There are no transformation edges!");
+        }
+
+        return edges.map((val) => val.getType().getPriority()).reduce((prev, curr) => (prev < curr) ? curr : prev, 0);
+    }
+
+    public getHighestDeepPriority(): number {
         const edges = this.getDeepEdges();
 
         if (edges.length < 1) {
@@ -311,9 +341,9 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     }
 
     public getNextClique(): IHGraph {
-        const node = this.getHighestPriorityNode();
-        const edges = [...node.getOutgoingEdges(), ...node.getIncomingEdges()];
-        const priority = edges.map((val) => val.getType().getPriority()).reduce((prev, curr) => (prev < curr) ? curr : prev, 0);
+        const node = this.getHighestPriorityShallowNode();
+        const priority = this.getHighestShallowPriority();
+        const edges = [...node.getOutgoingEdges(), ...node.getIncomingEdges()].filter((val) => val.getType().getPriority() <= priority);
         const edgeType = edges.filter((val) => val.getType().getPriority() === priority)[0].getType();
 
         return this.getClique(node, edgeType);
@@ -363,19 +393,20 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         });
     }
 
-    public replaceClique(clique: IHGraph, replacement: IHGraph, addCliqueNodes: boolean = true): void {
+    public replaceClique(clique: IHGraph, replacement: IHGraph, addCliqueNodes: boolean = true): [TransformationEdge[], TransformationEdge[]] {
         // Replace the old clique by a new one and re-route all edges from outside the clique to the new one.
         // If the new clique only contains one node, all edges will be re-routed to the node.
         // If there exist a node with the same id as the original node, this node will be the target.
         // Otherwise, they will lead to the first node.
 
-        const cliqueNodesIds = clique.getDeepNodes().map((val) => val.getId());
+        const cliqueNodes = clique.getNodes();
+
         const externalSourceEdges = this.edges.filter((val) => 
-            !cliqueNodesIds.includes(val.getSourceNode().getId()) && 
-            cliqueNodesIds.includes(val.getTargetNode().getId()));
+            !cliqueNodes.includes(val.getSourceNode()) && 
+            cliqueNodes.includes(val.getTargetNode()));
         const externalTargetEdges = this.edges.filter((val) =>
-            !cliqueNodesIds.includes(val.getTargetNode().getId()) && 
-            cliqueNodesIds.includes(val.getSourceNode().getId()));
+            !cliqueNodes.includes(val.getTargetNode()) && 
+            cliqueNodes.includes(val.getSourceNode()));
 
         const primaryNode = replacement.nodes[0];
         const replacementIds = replacement.getDeepNodes().map((val) => val.getId());
@@ -400,30 +431,28 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
         this.removeClique(clique);
 
-        if (replacement.getDeepNodes().length < 1) return;
+        if (replacement.getDeepNodes().length < 1) return [externalSourceEdges, externalTargetEdges];
 
         if (addCliqueNodes) {
             this.addClique(replacement);
+
+            externalSourceEdges.forEach((val) => { val.setTargetNode(sourceEdgesTargets.get(val)!); });
+            externalTargetEdges.forEach((val) => { val.setSourceNode(targetEdgesSources.get(val)!); });
         }
 
-        externalSourceEdges.forEach((val) => { val.setTargetNode(sourceEdgesTargets.get(val)!); });
-        externalTargetEdges.forEach((val) => { val.setSourceNode(targetEdgesSources.get(val)!); });
+        return [externalSourceEdges, externalTargetEdges];
     }
 
     public removeClique(clique: IHGraph): void {
         // Remove all nodes and edges from the graph that are in the clique
-        const cliqueNodes = clique.getDeepNodes();
-        const cliqueEdges = clique.getDeepEdges();
+        const cliqueNodes = clique.getNodes();
+        const cliqueEdges = clique.getEdges();
 
         cliqueEdges.forEach((val) => {
             this.removeEdgeByIds(val);
         });
         cliqueNodes.forEach((val) => {
-            if (val instanceof SourceNode) {
-                this.removeNodeById(val.getId());
-            } else {
-                this.removeNode(val);
-            }
+            this.removeNodeById(val.getId()!);
         });
 
     }
@@ -436,26 +465,59 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
      * 
      */
 
-    public getInducedHierarchy(maxIterations : number = 100): IHGraph {
+    public getInducedHierarchy(iterations: number = 1000, maxIterations: number = 100): IHGraph {
         let graph = this.clone();
-
+        
         let i = 0;
-
+        
         // If there are at least two different edge types from edges of all source nodes, induce a hierarchy.
         // Otherwise, return the graph itself.
         while (true) {
-            const sourceNodeEdges = graph.getSourceNodeEdges();
-            const edgeTypes = new Set(sourceNodeEdges.map((val) => val.getType()));
+            const edgeTypes = new Set(graph.getEdges().map((val) => val.getType()));
             if (edgeTypes.size < 2) {
                 return graph;
             }
-        
+            
             const clique = graph.getNextClique();
             const cliqueGraph = clique.clone();
-            graph.replaceClique(clique, cliqueGraph, false);
-            graph.nodes.push(cliqueGraph);
+            const graphNodes = graph.getGraphNodes();
+            const sourceNodesIds = graph.getSourceNodes().map((val) => val.getId());
+            const [externalSourceEdges, externalTargetEdges] = graph.replaceClique(clique, cliqueGraph, false);
+
+            externalSourceEdges.forEach((val) => { 
+                if (sourceNodesIds.includes(val.getSourceNode().getId())) {
+                    if (!val.hasAnnotation("flatTargetNode")) {
+                        val.createAnnotation("flatTargetNode", val.getTargetNode());
+                    }
+                    // if (val.getTargetNode() instanceof SourceNode) {
+                        val.getTargetNode().removeIncomingEdge(val);
+                        val.setTargetNode(cliqueGraph); 
+                    // }
+                }
+            });
+            externalTargetEdges.forEach((val) => { 
+                if (sourceNodesIds.includes(val.getTargetNode().getId())) {
+                    if (!val.hasAnnotation("flatSourceNode")) {
+                        val.createAnnotation("flatSourceNode", val.getSourceNode());
+                    }
+                    // if (val.getSourceNode() instanceof SourceNode) {
+                        (val.getSourceNode() as SourceNode).removeOutgoingEdge(val);
+                        val.setSourceNode(cliqueGraph); 
+                    // }
+                }
+            });
+
+            // Since getNextClique() already returns included IHGraph nodes, they do not need to be added again.
+            // However, the nodes must be removed from the original graph.
+            graphNodes.forEach((val) => {
+                graph.removeNode(val);
+            });
+            graph.addNode(cliqueGraph);
 
             i++;
+            if (i >= iterations) {
+                return graph;
+            }
             if (i > maxIterations) {
                 throw Error("Maximum number of induced hierarchies reached!");
             }
@@ -548,6 +610,8 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         const typeMapping = new Map<EdgeType, EdgeType>();
         const edgeMapping = new Map<TransformationEdge, TransformationEdge>();
 
+        this.cloneTo(clone);
+
         this.nodes.forEach((node) => {
             if (node instanceof SourceNode) {
                 const nodeClone = node.clone(clone);
@@ -587,8 +651,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             edge.cloneAnnotationsTo(edgeClone);
             edgeMapping.set(edge, edgeClone);
         }, this);
-
-        this.cloneAnnotationsTo(clone);
 
         clone.transformationConfiguration = this.transformationConfiguration;
 
@@ -664,5 +726,45 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             return value;  
         }
     }
+
+    public toStringDebugGraph(indent: string = ""): string {
+        const edgeTypes = this.getEdgeTypes();
+        const nodes = this.getNodes();
+        const sourceNodes = this.getSourceNodes();
+        const graphNodes = this.getGraphNodes();
+        const edges = this.getEdges();
+        const incomingEdges = this.getIncomingEdges();
+        const outgoingEdges = this.getOutgoingEdges();
+
+        let str = 
+            `${indent}IHGraph ${this.getIdHashCode()}\n` + 
+            `${indent}  edgetypes (${edgeTypes.length}): ${edgeTypes.map((val) => val.getIdHashCode()).join(", ")}\n` + 
+            `${indent}  nodes (${nodes.length}, ${sourceNodes.length}, ${graphNodes.length}): ${nodes.map((val) => val.getIdHashCode()).join(", ")}\n` +
+            `${indent}  edges (${edges.length}): ${edges.map((val) => 
+                val.getHashCode() + ": " + 
+                val.getSourceNode().getIdHashCode() + " -> " + 
+                val.getTargetNode().getIdHashCode()).join(", ")}\n`;
+
+        if (incomingEdges.length > 0) {
+            str += `${indent}  incoming (${incomingEdges.length}): ${incomingEdges.map((val) => 
+                val.getHashCode() + ": " + 
+                val.getSourceNode().getIdHashCode()).join(", ")}\n`;
+        }
+
+        if (outgoingEdges.length > 0) {
+            str += `${indent}  outgoing (${outgoingEdges.length}): ${outgoingEdges.map((val) => 
+                val.getHashCode() + ": " + 
+                val.getTargetNode().getIdHashCode()).join(", ")}\n`;
+        }
+
+        if (graphNodes.length > 0) {
+            str += `\n`;
+            graphNodes.forEach((val) => {
+                str += val.toStringDebugGraph(indent + "  ");
+            });
+        }
+
+        return str;
+    }    
     
 }

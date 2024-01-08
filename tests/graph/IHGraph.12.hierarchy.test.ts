@@ -75,7 +75,7 @@ test("checkTHGraphHierarchyPriority", () => {
     thGraph.createTransformationEdge(type12, node1, thGraph.getNodes()[0]!);
 
     // then
-    expect(thGraph.getHighestPriority()).toBe(26);
+    expect(thGraph.getHighestDeepPriority()).toBe(26);
 });
 
 test("checkTHGraphHierarchyCloneSizes", () => {

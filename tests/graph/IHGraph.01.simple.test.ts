@@ -71,6 +71,6 @@ test("checkTHGraphSimplePriority", () => {
     thGraph.createTransformationEdge(type32, node1!, node2!);
 
     // then
-    expect(thGraph.getHighestPriority()).toBe(32);
+    expect(thGraph.getHighestShallowPriority()).toBe(32);
 });
 

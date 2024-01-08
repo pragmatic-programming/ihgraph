@@ -17,19 +17,32 @@
 import { Annotatable } from "./Annotatable";
 
 export class NamedElement extends Annotatable {
-    protected id: string | undefined;
+    protected id: string;
 
-    constructor(id: string | undefined = undefined) {
+    constructor(id: string = "") {
         super();
-        this.id = id;
+        if (id == "") {
+            this.id = "id" + this.hashCode();
+        } else {
+            this.id = id;
+        }
     }
-
-    getId(): string | undefined {
+    
+    getId(): string {
         return this.id;
     }
-
+    
     setId(id: string): void {
         this.id = id;
+    }
+
+    getIdHashCode(): string {
+        return `${this.getId()} (${this.getHashCode()})`;
+    }
+
+    public cloneTo(target: NamedElement): void {
+        super.cloneTo(target);
+        target.id = this.id;
     }
 }
 
