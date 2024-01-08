@@ -14,10 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { testGraphDemo03SCCharts, testGraphDemo04WYTIWYGSum } from "./TestGraphs";
+import { testGraphSCCharts, testGraphWYTIWYGSum } from "./testgraphs/TestGraphs";
 
 test("getImmediateClique", () => {
-    const graph = testGraphDemo03SCCharts();
+    const graph = testGraphSCCharts();
 
     expect(graph).toBeDefined();
 
@@ -28,7 +28,7 @@ test("getImmediateClique", () => {
 })
 
 test("getImmediateCliqueMixed", () => {
-    const graph = testGraphDemo03SCCharts();
+    const graph = testGraphSCCharts();
     const abroNode = graph.getNodes()[0];
     const edgeType = graph.createEdgeType("SCCharts", 1);
     const resultNode = graph.createSourceNode("Result");
@@ -50,7 +50,7 @@ test("getImmediateCliqueMixed", () => {
 })
 
 test("getImmediateCliqueMultipleEdges", () => {
-    const graph = testGraphDemo04WYTIWYGSum();
+    const graph = testGraphWYTIWYGSum();
 
     expect(graph).toBeDefined();
 

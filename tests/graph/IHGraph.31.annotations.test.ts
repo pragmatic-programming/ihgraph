@@ -14,11 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { testGraphDemo01 } from "./TestGraphs";
+import { testGraphSequence } from "./testgraphs/TestGraphs";
 import { createIHGraphFromJSONString } from "../../src/IHFactory";
 
 test("createIHGraphAnnotation01Primitives", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -28,7 +28,7 @@ test("createIHGraphAnnotation01Primitives", () => {
 });
 
 test("createIHGraphAnnotation02Set", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -44,7 +44,7 @@ interface NewData {
 }
 
 test("createIHGraphAnnotation03Objects", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -54,7 +54,7 @@ test("createIHGraphAnnotation03Objects", () => {
 });
 
 test("createIHGraphAnnotation04Retrieval", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -72,7 +72,7 @@ test("createIHGraphAnnotation04Retrieval", () => {
 });
 
 test("createIHGraphAnnotation05GenericRetrieval", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -92,7 +92,7 @@ test("createIHGraphAnnotation05GenericRetrieval", () => {
 });
 
 test("createIHGraphAnnotation06Multiple", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -104,7 +104,7 @@ test("createIHGraphAnnotation06Multiple", () => {
 });
 
 test("createIHGraphAnnotation07SerializationGraph", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -126,7 +126,7 @@ test("createIHGraphAnnotation07SerializationGraph", () => {
 });
 
 test("createIHGraphAnnotation08SerializationNode", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -153,7 +153,7 @@ test("createIHGraphAnnotation08SerializationNode", () => {
 });
 
 test("createIHGraphAnnotation09SerializationEdgeType", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -180,7 +180,7 @@ test("createIHGraphAnnotation09SerializationEdgeType", () => {
 });
 
 test("createIHGraphAnnotation10SerializationEdge", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -207,7 +207,7 @@ test("createIHGraphAnnotation10SerializationEdge", () => {
 });
 
 test("createIHGraphAnnotation11CloneGraph", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -224,7 +224,7 @@ test("createIHGraphAnnotation11CloneGraph", () => {
 });
 
 test("createIHGraphAnnotation12CloneNode", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -246,7 +246,7 @@ test("createIHGraphAnnotation12CloneNode", () => {
 });
 
 test("createIHGraphAnnotation13CloneEdgeType", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 
@@ -268,7 +268,7 @@ test("createIHGraphAnnotation13CloneEdgeType", () => {
 });
 
 test("createIHGraphAnnotation14CloneEdge", () => {
-    const graph = testGraphDemo01();
+    const graph = testGraphSequence();
 
     expect(graph).toBeDefined();
 

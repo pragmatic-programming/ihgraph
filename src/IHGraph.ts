@@ -461,8 +461,8 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             }
         }
     }
-    
 
+    
 
     /****************************************
      * 

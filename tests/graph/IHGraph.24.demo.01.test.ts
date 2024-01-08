@@ -14,11 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { testGraphDemo01 } from "./TestGraphs";
+import { testGraphSequence } from "./testgraphs/TestGraphs";
 
 test("createTHGraphDemo01Create", () => {
     // given
-    const thGraph = testGraphDemo01();
+    const thGraph = testGraphSequence();
 
     // then
     expect(thGraph.getNodes().length).toBe(3);
