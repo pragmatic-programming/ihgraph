@@ -38,7 +38,7 @@
     "rimraf": "latest",
     "ts-jest": "^29.1.0",
     "typescript": "^4.9.5",
-    "kico": "link:../kico-core"
+    "kico": "link:../kico"
   },
   "scripts": {
     "clean": "rimraf lib",
