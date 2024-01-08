@@ -1,4 +1,4 @@
-import { IHGraphFactoryInterface } from "../../../src/IHFactory";
+import { IHGraphFactoryInterface } from "../../IHFactory";
 
 export function WYTIWYGSum(): IHGraphFactoryInterface {
     return {        

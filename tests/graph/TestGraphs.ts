@@ -14,13 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { createIHGraphFromJSON } from "../../../src/IHFactory";
-import { IHGraph } from "../../../src/IHGraph";
-import { SCCharts } from "./SCCharts";
-import { Sequence } from "./Sequence";
-import { SequenceExecute } from "./SequenceExecute";
-import { WYTIWYGSum } from "./WYTIWYGSum";
-import { WYTIWYGSumExecute } from "./WYTIWYGSumExecute";
+import { createIHGraphFromJSON } from "../../src/IHFactory";
+import { IHGraph } from "../../src/IHGraph";
+import { SCCharts } from "../../src/examples/graphs/SCCharts";
+import { Sequence } from "../../src/examples/graphs/Sequence";
+import { SequenceExecute } from "../../src/examples/graphs/SequenceExecute";
+import { SequenceExecuteNothing } from "../../src/examples/graphs/SequenceExecuteNothing";
+import { WYTIWYGSum } from "../../src/examples/graphs/WYTIWYGSum";
+import { WYTIWYGSumExecute } from "../../src/examples/graphs/WYTIWYGSumExecute";
 
 export function testGraphSimple(): IHGraph {
     const thGraph = new IHGraph();
@@ -39,6 +40,10 @@ export function testGraphSequence(): IHGraph {
 
 export function testGraphSequenceExecute(): IHGraph {
     return createIHGraphFromJSON(SequenceExecute());
+}
+
+export function testGraphSequenceExecuteNothing(): IHGraph {
+    return createIHGraphFromJSON(SequenceExecuteNothing());
 }
 
 export function testGraphSCCharts(): IHGraph {

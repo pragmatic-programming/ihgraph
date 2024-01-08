@@ -23,3 +23,10 @@ export * from './SourceNode';
 export * from './TransformationEdge';
 export * from './TransformationConfiguration';
 export * from './TransformationProcessor';
+
+export * from './examples/graphs/SCCharts';
+export * from './examples/graphs/Sequence';
+export * from './examples/graphs/SequenceExecute';
+export * from './examples/graphs/SequenceExecuteNothing';
+export * from './examples/graphs/WYTIWYGSum';
+export * from './examples/graphs/WYTIWYGSumExecute';

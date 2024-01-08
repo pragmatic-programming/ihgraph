@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { testGraphSCCharts, testGraphWYTIWYGSum } from "./testgraphs/TestGraphs";
+import { testGraphSCCharts, testGraphWYTIWYGSum } from "./TestGraphs";
 
 test("getImmediateClique", () => {
     const graph = testGraphSCCharts();
