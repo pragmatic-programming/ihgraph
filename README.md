@@ -1,10 +1,13 @@
-# ihgraph
+# Induced Hierarchy Graph
 
+The Induced Hierarchy Graph is a node edge graph that forms hierarchies according to its edge priorities.
 ## Build
 
 ```shell
 # build project
-npm run build
+yarn
+yarn run build
+
 # run tests
-yarn run jest
+yarn run test
 ```
