@@ -269,6 +269,12 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         }
         return type;
     }
+
+    public hasEdgeType(edgeType : EdgeType): boolean {
+        return this.edgeTypes.some((val) => val.getId() === edgeType.getId() && 
+            val.getPriority() === edgeType.getPriority() && 
+            val.isImmediate() === edgeType.isImmediate());
+    }
     
     public addEdgeType(edgeType: EdgeType) {
         this.edgeTypes.push(edgeType);
@@ -487,7 +493,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             externalSourceEdges.forEach((val) => { 
                 if (sourceNodesIds.includes(val.getSourceNode().getId())) {
                     if (!val.hasAnnotation("flatTargetNode")) {
-                        val.createAnnotation("flatTargetNode", val.getTargetNode());
+                        val.createAnnotation("flatTargetNode", val.getTargetNode().getId());
                     }
                     // if (val.getTargetNode() instanceof SourceNode) {
                         val.getTargetNode().removeIncomingEdge(val);
@@ -498,7 +504,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             externalTargetEdges.forEach((val) => { 
                 if (sourceNodesIds.includes(val.getTargetNode().getId())) {
                     if (!val.hasAnnotation("flatSourceNode")) {
-                        val.createAnnotation("flatSourceNode", val.getSourceNode());
+                        val.createAnnotation("flatSourceNode", val.getSourceNode().getId());
                     }
                     // if (val.getSourceNode() instanceof SourceNode) {
                         (val.getSourceNode() as SourceNode).removeOutgoingEdge(val);
@@ -522,6 +528,66 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
                 throw Error("Maximum number of induced hierarchies reached!");
             }
         }
+    }
+
+    public getFlattenedHierarchy(): IHGraph {
+        const graph = this.clone();
+        const graphNodes = graph.getGraphNodes();
+
+        if (graphNodes.length < 1) {
+            return graph;
+        }
+
+        // There are not hierarchy overlapping edges.
+        // Hence, we can simply expand the internal nodes into the graph and re-route the edge of the graph node.
+        // If there is a flat node annotation use that node for the re-routing. 
+        // Otherwise, use the first node of the graph node since it should not matter semantically.
+        for (const graphNode of graphNodes) {
+            // Work recursively.
+            const flatGraphNode = graphNode.getFlattenedHierarchy();
+
+            // Validate edge types.
+            for (const edgeType of flatGraphNode.getEdgeTypes()) {
+                if (!graph.hasEdgeType(edgeType)) {
+                    graph.addEdgeType(edgeType);
+                }
+            }
+
+            // Add internal nodes and edges. 
+            // There should only be source nodes left.
+            const edges = new Set<TransformationEdge>();
+            for (const node of flatGraphNode.getSourceNodes()) {
+                graph.addNode(node);
+                node.getIncomingEdges().forEach((val) => edges.add(val));
+                node.getOutgoingEdges().forEach((val) => edges.add(val));
+            }
+
+            for (const edge of edges) {
+                graph.edges.push(edge);
+            }
+
+            // Re-route graph node edges.
+            for (const incomingEdge of graphNode.getIncomingEdges()) {
+                let flatTargetNode = incomingEdge.hasAnnotation("flatTargetNode") ? 
+                graph.getNodeById(incomingEdge.getAnnotationData<string>("flatTargetNode")) : undefined;
+                if (flatTargetNode == undefined) {
+                    flatTargetNode = flatGraphNode.getSourceNodes()[0];
+                }
+                incomingEdge.setTargetNode(flatTargetNode);
+            }
+            for (const incomingEdge of graphNode.getOutgoingEdges()) {
+                let flatSourceNode = incomingEdge.hasAnnotation("flatSourceNode") ? 
+                    graph.getNodeById(incomingEdge.getAnnotationData<string>("flatSourceNode")) : undefined;
+                if (flatSourceNode == undefined) {
+                    flatSourceNode = flatGraphNode.getSourceNodes()[0];
+                }
+                incomingEdge.setSourceNode(flatSourceNode);
+            }
+
+            graph.removeNode(graphNode);
+        }
+        
+        return graph;
     }
 
 
