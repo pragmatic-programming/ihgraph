@@ -554,6 +554,11 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
+"@pragmatic-programming/kico@0.0.1-rc.1":
+  version "0.0.1-rc.1"
+  resolved "https://npm.pkg.github.com/download/@pragmatic-programming/kico/0.0.1-rc.1/369c2e19c4a9dc534023500f6d184997b11589e8#369c2e19c4a9dc534023500f6d184997b11589e8"
+  integrity sha512-vfDgNdt9+7tek5k3w7CgQ+yOgYRie/+60QHg6grJTjB0GSN9gu/9SKFZmrxlCyd53FkqCoF1astkV84LN4w7WA==
+
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.8.tgz#6667fac16c436b5434a387a34dedb013198f6e6e"
@@ -1716,10 +1721,6 @@ json5@^2.2.3:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
   integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
-
-"kico@link:../kico":
-  version "0.0.0"
-  uid ""
 
 kleur@^3.0.3:
   version "3.0.3"
