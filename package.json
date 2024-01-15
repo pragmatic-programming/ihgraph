@@ -1,6 +1,6 @@
 {
-  "name": "ihgraph",
-  "version": "1.0.0",
+  "name": "@pragmatic-programming/ihgraph",
+  "version": "0.0.1-rc.1",
   "description": "Induced Hierarchy Graph",
   "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [
@@ -8,8 +8,8 @@
     "diagrams",
     "data structure"
   ],
-  "homepage": "https://github.com/ssmifi/ihgraph",
-  "bugs": "https://github.com/ssmifi/ihgraph/issues",
+  "homepage": "https://github.com/pragmatic-programming/ihgraph",
+  "bugs": "https://github.com/pragmatic-programming/ihgraph/issues",
   "author": {
     "name": "ssmifi"
   },
@@ -21,7 +21,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ssmifi/ihgraph.git"
+    "url": "https://github.com/pragmatic-programming/ihgraph.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "files": [
     "lib",
