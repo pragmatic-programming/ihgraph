@@ -22,7 +22,7 @@ import { SourceNode } from "./SourceNode";
 import { TransformationEdge } from "./TransformationEdge";
 import { TransformationConfiguration } from "./TransformationConfiguration";
 import { TransformationProcessor } from "./TransformationProcessor";
-import { AnnotationFactoryType, EdgeFactoryClass, EdgeTypeFactoryClass, FactoryObjectClass, SourceNodeFactoryClass } from "./IHFactory";
+import { EdgeFactoryClass, EdgeTypeFactoryClass, FactoryObjectClass, SourceNodeFactoryClass } from "./IHFactory";
 
 export type IHNode = SourceNode | IHGraph;
 
@@ -36,7 +36,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
     protected parent: IHGraph | undefined;
     protected nodes: IHNode[] = [];
-    protected edges: TransformationEdge[] = [];
     protected edgeTypes : EdgeType[] = [];
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
@@ -72,8 +71,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     }
 
     public createTransformationEdge(type: EdgeType, sourceNode: IHNode, targetNode: IHNode): TransformationEdge {
-        const transformationEdge: TransformationEdge = new TransformationEdge(this, type, sourceNode, targetNode);
-        this.edges.push(transformationEdge);
+        const transformationEdge: TransformationEdge = new TransformationEdge(type, sourceNode, targetNode);
 
         return transformationEdge;
     }
@@ -189,11 +187,21 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
      */
 
     public getEdges(): TransformationEdge[] {
-        return this.edges;
+        const edges = new Set<TransformationEdge>();
+        this.getNodes().forEach((node) => {
+            node.getIncomingEdges().forEach((val) => edges.add(val));
+            node.getOutgoingEdges().forEach((val) => edges.add(val));
+        });
+        return Array.from(edges);
     }
 
     public getSourceNodeEdges(): TransformationEdge[] {
-        return this.edges.filter((edge) => edge.getSourceNode() instanceof SourceNode && edge.getTargetNode() instanceof SourceNode);
+        const edges = new Set<TransformationEdge>();
+        this.getSourceNodes().forEach((node) => {
+            node.getIncomingEdges().forEach((val) => edges.add(val));
+            node.getOutgoingEdges().forEach((val) => edges.add(val));
+        });
+        return Array.from(edges);
     }
     
     public getIncomingEdges(): TransformationEdge[] {
@@ -207,7 +215,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     public getDeepEdges(): TransformationEdge[] {
         const graphNodes = this.getGraphNodes();
         const graphEdges = graphNodes.map((val) => val.getDeepEdges()).reduce((prev, curr) => prev.concat(curr), []);
-        return this.edges.concat(graphEdges);
+        return this.getEdges().concat(graphEdges);
     }
 
     public addOutgoingEdge(edge: TransformationEdge): void {
@@ -227,10 +235,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
     }
 
     public removeEdge(edge: TransformationEdge): void {
-        const index = this.edges.indexOf(edge);
-        if (index > -1) {
-            this.edges.splice(index, 1);
-        }
         edge.remove();
     }
     
@@ -238,7 +242,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         const sourceNodeId = edge.getSourceNode().getId();
         const targetNodeId = edge.getTargetNode().getId();
         const edgeTypeId = edge.getType().getId();
-        const edgesToRemove = this.edges.filter((edge) => 
+        const edgesToRemove = this.getEdges().filter((edge) => 
             edge.getSourceNode().getId() === sourceNodeId && 
             edge.getTargetNode().getId() === targetNodeId && 
             edge.getType().getId() === edgeTypeId);
@@ -340,7 +344,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         const clique = new IHGraph();
         visited.forEach((val) => clique.nodes.push(val));
         clique.edgeTypes.push(edgeType);
-        clique.edges = this.getDeepEdges().filter((val) => val.getType() === edgeType && visited.includes(val.getSourceNode()) && visited.includes(val.getTargetNode()));
         clique.transformationConfiguration = this.transformationConfiguration;
 
         return clique;
@@ -392,11 +395,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
                 edgeTypeMap.set(val, edgeType);
             }
         });
-
-        cliqueEdges.forEach((val) => {
-            val.setType(edgeTypeMap.get(val.getType())!);
-            this.edges.push(val);
-        });
     }
 
     public replaceClique(clique: IHGraph, replacement: IHGraph, addCliqueNodes: boolean = true): [TransformationEdge[], TransformationEdge[]] {
@@ -407,10 +405,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
         const cliqueNodes = clique.getNodes();
 
-        const externalSourceEdges = this.edges.filter((val) => 
+        const externalSourceEdges = this.getEdges().filter((val) => 
             !cliqueNodes.includes(val.getSourceNode()) && 
             cliqueNodes.includes(val.getTargetNode()));
-        const externalTargetEdges = this.edges.filter((val) =>
+        const externalTargetEdges = this.getEdges().filter((val) =>
             !cliqueNodes.includes(val.getTargetNode()) && 
             cliqueNodes.includes(val.getSourceNode()));
 
@@ -555,15 +553,8 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
             // Add internal nodes and edges. 
             // There should only be source nodes left.
-            const edges = new Set<TransformationEdge>();
             for (const node of flatGraphNode.getSourceNodes()) {
                 graph.addNode(node);
-                node.getIncomingEdges().forEach((val) => edges.add(val));
-                node.getOutgoingEdges().forEach((val) => edges.add(val));
-            }
-
-            for (const edge of edges) {
-                graph.edges.push(edge);
             }
 
             // Re-route graph node edges.
@@ -678,9 +669,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
         this.cloneTo(clone);
 
+        // Clone nodes.
         this.nodes.forEach((node) => {
             if (node instanceof SourceNode) {
-                const nodeClone = node.clone(clone);
+                const nodeClone = node.clone(clone, edgeMapping);
                 clone.addNode(nodeClone);
                 nodeMapping.set(node, nodeClone);
             } else {
@@ -693,30 +685,22 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
             }
         }, this);
 
+        // Clone edge types.
         this.edgeTypes.forEach((type) => {
             const typeClone = type.clone();
             clone.addEdgeType(typeClone);
             typeMapping.set(type, typeClone);
         }, this);
 
-        this.edges.forEach((edge) => {
-            const type = typeMapping.get(edge.getType());
-            if (type == undefined) {
-                throw Error("Edge type is not mapped! The graph structure is corrupted!");
-            }
-            const sourceNode = nodeMapping.get(edge.getSourceNode());
-            if (sourceNode == undefined) {
-                throw Error("Source node is not mapped! The graph structure is corrupted! (" + edge.getSourceNode().getId() + ")");
-            }
-            const targetNode = nodeMapping.get(edge.getTargetNode());
-            if (targetNode == undefined) {
-                throw Error("Target node is not mapped! The graph structure is corrupted! (" + edge.getTargetNode().getId() + ")");
-            }
+        // Set undefined edge types and target nodes.
+        const reverseEdgeMapping = new Map<TransformationEdge, TransformationEdge>();
+        edgeMapping.forEach((val, key) => reverseEdgeMapping.set(val, key));
 
-            const edgeClone = clone.createTransformationEdge(type, sourceNode, targetNode);
-            edge.cloneAnnotationsTo(edgeClone);
-            edgeMapping.set(edge, edgeClone);
-        }, this);
+        const edges = clone.getEdges();
+        for (const edge of edges) {
+            edge.setType(typeMapping.get(reverseEdgeMapping.get(edge)!.getType())!);
+            edge.setTargetNode(nodeMapping.get(reverseEdgeMapping.get(edge)!.getTargetNode())!);
+        }
 
         clone.transformationConfiguration = this.transformationConfiguration;
 

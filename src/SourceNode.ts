@@ -43,8 +43,15 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         this.id = id;
     }
 
-    public clone(parent: IHGraph | null = null): SourceNode {    
+    public clone(parent: IHGraph | null = null, edgeMapping: Map<TransformationEdge, TransformationEdge> | undefined = undefined): SourceNode {    
         const clone = new SourceNode(parent ? parent : this.parent, this.id);
+        for (const outgoingEdge of this.outgoingEdges) {
+            const edgeClone = outgoingEdge.clone(clone);
+            if (edgeMapping !== undefined) {
+                edgeMapping.set(outgoingEdge, edgeClone);
+            }
+        }
+        
         clone.content = this.content;
         clone.status = this.status;
         this.cloneAnnotationsTo(clone);
@@ -60,6 +67,13 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
     }
 
     public getContent(): SourceNodeContent {
+        return this.content;
+    }
+
+    public getContentAsString(): string {
+        if (this.content == undefined) {
+            return "";
+        }
         return this.content;
     }
 
