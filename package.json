@@ -30,6 +30,7 @@
   ],
   "main": "lib/src/index",
   "devDependencies": {
+    "@pragmatic-programming/kico": "0.0.1-rc.1",
     "@types/jest": "^29.5.1",
     "@types/mock-fs": "^4.13.1",
     "@types/node": "^18.15.3",
@@ -37,8 +38,7 @@
     "mock-fs": "^5.2.0",
     "rimraf": "latest",
     "ts-jest": "^29.1.0",
-    "typescript": "^4.9.5",
-    "kico": "link:../kico"
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "clean": "rimraf lib",
