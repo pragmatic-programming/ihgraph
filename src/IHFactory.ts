@@ -49,9 +49,9 @@ export interface IHGraphFactoryInterface {
 
 export class SourceNodeFactoryClass extends Annotatable {
     id: string = "";
-    content: string = "";
+    content: SourceNodeContent = undefined;
 
-    constructor(id: string, content : string) {
+    constructor(id: string, content : SourceNodeContent) {
         super();
         this.id = id;
         this.content = content;

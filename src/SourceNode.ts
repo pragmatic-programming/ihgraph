@@ -27,12 +27,12 @@ export enum SourceNodeStatus {
     ERROR = "ERROR"
 }
 
-export type SourceNodeContent = string;
+export type SourceNodeContent = undefined | string;
 
 export class SourceNode extends NamedElement implements EdgeReceiver {
     protected parent : IHGraph;
     protected id : string;
-    protected content : string = "";
+    protected content : SourceNodeContent = undefined;
     protected status : SourceNodeStatus = SourceNodeStatus.UNDEFINED;
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
@@ -59,11 +59,11 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         return this.id;
     }
 
-    public getContent(): string {
+    public getContent(): SourceNodeContent {
         return this.content;
     }
 
-    public setContent(content: string): void {
+    public setContent(content: SourceNodeContent): void {
         this.content = content;
     }
 
