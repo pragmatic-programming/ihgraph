@@ -556,8 +556,8 @@
 
 "@pragmatic-programming/kico@0.0.1-rc.1":
   version "0.0.1-rc.1"
-  resolved "https://npm.pkg.github.com/download/@pragmatic-programming/kico/0.0.1-rc.1/369c2e19c4a9dc534023500f6d184997b11589e8#369c2e19c4a9dc534023500f6d184997b11589e8"
-  integrity sha512-vfDgNdt9+7tek5k3w7CgQ+yOgYRie/+60QHg6grJTjB0GSN9gu/9SKFZmrxlCyd53FkqCoF1astkV84LN4w7WA==
+  resolved "https://registry.yarnpkg.com/@pragmatic-programming/kico/-/kico-0.0.1-rc.1.tgz#2b6d019465446251bbb81923b2c949a8967e5099"
+  integrity sha512-Jngg5N2gcKFnzuEnVp1l852bhIqtf41240O3eOHgyH3x5oky8DgLG1Hq+70sLRl5wMHdnxtUy3YU0Py4KeQdXQ==
 
 "@sinclair/typebox@^0.27.8":
   version "0.27.8"
