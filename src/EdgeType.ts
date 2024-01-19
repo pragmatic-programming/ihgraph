@@ -44,6 +44,12 @@ export class EdgeType extends NamedElement {
         this.cloneAnnotationsTo(newType);
         return newType;
     }
+
+    public equals(other: EdgeType): boolean {
+        return super.equals(other) &&
+            this.getPriority() === other.getPriority() &&
+            this.isImmediate() === other.isImmediate();
+    }
     
     getId(): string {
         return this.id!;
