@@ -14,15 +14,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import * as kico from "kico";
+
 import { EdgeReceiver } from "./EdgeReceiver";
 import { EdgeType } from "./EdgeType";
-import { NamedElement, getIds } from "./NamedElement";
+import { getIds, NamedElement } from "./NamedElement";
 import { SimpleNode } from "./SimpleNode";
 import { TransformationEdge } from "./TransformationEdge";
 import { TransformationConfiguration } from "./TransformationConfiguration";
 import { TransformationProcessor } from "./TransformationProcessor";
 import { EdgeFactoryClass, EdgeTypeFactoryClass, FactoryObjectClass, SourceNodeFactoryClass } from "./IHFactory";
+import { KicoCloneable } from "@pragmatic-programming/kico";
 
 export type IHNode = SimpleNode | IHGraph;
 
@@ -33,20 +34,21 @@ export type IHNode = SimpleNode | IHGraph;
  * The data structure extends the NamedElement class and is hence uniquely identifiable.
  * It implements the EdgeReceiver interface to receive edges from other nodes/graphs and KiCoCloneable for the KiCo environments to be used in the dynamic compiler.
  */
-export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoCloneable {
+export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable {
 
     /****************************************
-     * 
+     *
      * Fields & Constructor
-     * 
+     *
      */
 
     protected parent: IHGraph | undefined;
     protected nodes: IHNode[] = [];
-    protected edgeTypes : EdgeType[] = [];
+
+    protected edgeTypes: EdgeType[] = [];
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
-    protected transformationConfiguration: TransformationConfiguration;;
+    protected transformationConfiguration: TransformationConfiguration;
 
     /**
      * Constructor of the IHGraph class.
@@ -62,7 +64,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
      * Tells KiCo that the structure is mutable.
      */
     public isMutable(): boolean {
-        return true;    
+        return true;
     }
 
     /**
@@ -76,9 +78,9 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Create
-     * 
+     *
      */
 
     /**
@@ -122,10 +124,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Getter / Setter for nodes
      * The order is generic getter, specialized getters, add, update, remove.
-     * 
+     *
      */
     
     /**
@@ -272,10 +274,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Getter / Setter for edges of the EdgeReceiver interface
      * The order is generic getter, specialized getters, add, update, remove.
-     * 
+     *
      */
 
     /**
@@ -326,8 +328,6 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         this.outgoingEdges = this.outgoingEdges.filter((e) => e !== edge);
     }
 
-
-
     /****************************************
      * 
      * Getter / Setter for edges of the graph
@@ -376,6 +376,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
      * @param edge The edge that should be removed from the graph.
      */
     public removeEdge(edge: TransformationEdge): void {
+
         edge.remove();
     }
     
@@ -397,10 +398,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Getter / Setter for edge types
      * The order is generic getter, specialized getters, add, update, remove.
-     * 
+     *
      */
 
     /**
@@ -444,8 +445,8 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
      * @returns True if an identical edge type is present in the graph.
      */
     public hasEdgeType(edgeType: EdgeType): boolean {
-        return this.edgeTypes.some((val) => val.getId() === edgeType.getId() && 
-            val.getPriority() === edgeType.getPriority() && 
+        return this.edgeTypes.some((val) => val.getId() === edgeType.getId() &&
+            val.getPriority() === edgeType.getPriority() &&
             val.isImmediate() === edgeType.isImmediate());
     }
 
@@ -505,10 +506,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Getter / Setter for cliques
      * The order is generic getter, specialized getters, add, update, remove.
-     * 
+     *
      */
 
     /**
@@ -518,13 +519,16 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
      * @returns The clique as IHGraph.
      */
     public getClique(node : IHNode, edgeType: EdgeType): IHGraph {
+        // BFS from node with the same edge type
+
         const queue: IHNode[] = [];
         const visited: IHNode[] = [];
+
         queue.push(node);
-        
+       
         while (queue.length > 0) {
             const curr = queue.shift()!;
-            
+           
             if (visited.includes(curr)) {
                 continue;
             }
@@ -605,6 +609,8 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
                 edgeTypeMap.set(val, edgeType);
             }
         });
+
+
     }
 
     /**
@@ -684,9 +690,9 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Induced Hierarchies
-     * 
+     *
      */
 
     /**
@@ -862,10 +868,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
 
     /****************************************
-     * 
+     *
      * Equals & Clone
-     * 
-     */ 
+     *
+     */
 
     /**
      * Checks whether or not the graph is equal to another graph.
@@ -1034,10 +1040,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
 
     
     /****************************************
-     * 
+     *
      * Serialize & Stringify
-     * 
-     */ 
+     *
+     */
 
     /**
      * Serializes the graph to a JSON string.
@@ -1100,27 +1106,27 @@ export class IHGraph extends NamedElement implements EdgeReceiver, kico.KicoClon
         const incomingEdges = this.getIncomingEdges();
         const outgoingEdges = this.getOutgoingEdges();
 
-        let str = 
-            `${indent}IHGraph ${this.getIdHashCode()}\n` + 
-            `${indent}  edgetypes (${edgeTypes.length}): ${edgeTypes.map((val) => val.getIdHashCode()).join(", ")}\n` + 
+        let str =
+            `${indent}IHGraph ${this.getIdHashCode()}\n` +
+            `${indent}  edgetypes (${edgeTypes.length}): ${edgeTypes.map((val) => val.getIdHashCode()).join(", ")}\n` +
             `${indent}  nodes (${nodes.length}, ${sourceNodes.length}, ${graphNodes.length}): ${nodes.map((val) => val.getIdHashCode()).join(", ")}\n` +
             `${indent}  edges (${edges.length}): \n`;
             
         str += `${edges.map((val) => 
-                indent + "             " + val.getHashCode() + ": " + 
-                val.getSourceNode().getIdHashCode() + " -> " + 
+                indent + "             " + val.getHashCode() + ": " +
+                val.getSourceNode().getIdHashCode() + " -> " +
                 val.getTargetNode().getIdHashCode() + 
                 " [" + val.getType().getIdHashCode() + "]").join("\n")}\n`;
 
         if (incomingEdges.length > 0) {
-            str += `${indent}  incoming (${incomingEdges.length}): ${incomingEdges.map((val) => 
-                val.getHashCode() + ": " + 
+            str += `${indent}  incoming (${incomingEdges.length}): ${incomingEdges.map((val) =>
+                val.getHashCode() + ": " +
                 val.getSourceNode().getIdHashCode()).join(", ")}\n`;
         }
 
         if (outgoingEdges.length > 0) {
-            str += `${indent}  outgoing (${outgoingEdges.length}): ${outgoingEdges.map((val) => 
-                val.getHashCode() + ": " + 
+            str += `${indent}  outgoing (${outgoingEdges.length}): ${outgoingEdges.map((val) =>
+                val.getHashCode() + ": " +
                 val.getTargetNode().getIdHashCode()).join(", ")}\n`;
         }
 

@@ -14,9 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import * as kico from "kico";
 import { EdgeType } from "./EdgeType";
-import { IHGraph } from "./IHGraph";
 import { TransformationProcessor } from "./TransformationProcessor";
 
 export class TransformationConfiguration {
@@ -31,11 +29,11 @@ export class TransformationConfiguration {
     }
 
     public get(edgeType: EdgeType): typeof TransformationProcessor | undefined {
-    //     const value = [...this.mapping.entries()].find(
-    //         ([key, val]) => key.getId() === edgeType.getId())?.[1];
+        //     const value = [...this.mapping.entries()].find(
+        //         ([key, val]) => key.getId() === edgeType.getId())?.[1];
 
-    //     return value;
-    // }
+        //     return value;
+        // }
         for (const [key, value] of this.mapping.entries()) {
             if (key.getId() === edgeType.getId()) {
                 return value;
@@ -49,11 +47,11 @@ export class TransformationConfiguration {
 
     public setById(edgeTypeId: string, processor: typeof TransformationProcessor): void {
         const edgeType = new EdgeType(edgeTypeId);
-        
+
         if (edgeType === undefined) {
             throw new Error(`EdgeType with id ${edgeTypeId} does not exist.`);
         }
-        
+
         this.set(edgeType, processor);
     }
 }
