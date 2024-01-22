@@ -16,17 +16,17 @@
 
 import * as kico from "kico";
 import { IHGraph } from "./IHGraph";
-import { SourceNode } from "./SourceNode";
+import { SimpleNode } from "./SimpleNode";
 
 export class TransformationProcessor extends kico.Processor<IHGraph, IHGraph> {
 
-    public createSingleResultNode(id: string): SourceNode {
+    public createSingleResultNode(id: string): SimpleNode {
         const targetGraph = new IHGraph();
         const sourceNode = targetGraph.createSourceNode(id);
         return sourceNode;
     }
 
-    public createSingleStringResultNode(id: string, content: string): SourceNode {
+    public createSingleStringResultNode(id: string, content: string): SimpleNode {
         const sourceNode = this.createSingleResultNode(id);
         sourceNode.setContent(content);
         return sourceNode;

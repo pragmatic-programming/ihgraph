@@ -27,12 +27,12 @@ test("inducedHierarchyDepth1", () => {
     expect(inducedHierarchyGraph).toBeDefined();
 
     const graphNodes = inducedHierarchyGraph.getGraphNodes();
-    const sourceNodes = inducedHierarchyGraph.getSourceNodes();
+    const sourceNodes = inducedHierarchyGraph.getSimpleNodes();
 
     expect(graphNodes.length).toBe(1);
     expect(sourceNodes.length).toBe(1);
 
-    const graphNodeSourceNodes = graphNodes[0].getSourceNodes();
+    const graphNodeSourceNodes = graphNodes[0].getSimpleNodes();
 
     expect(graphNodeSourceNodes.length).toBe(2);
 
@@ -61,7 +61,7 @@ test("inducedHierarchyDepth2", () => {
     expect(inducedHierarchyGraph).toBeDefined();
 
     const graphNodes = inducedHierarchyGraph.getGraphNodes();
-    const sourceNodes = inducedHierarchyGraph.getSourceNodes();
+    const sourceNodes = inducedHierarchyGraph.getSimpleNodes();
 
     expect(graphNodes.length).toBe(1);
     expect(sourceNodes.length).toBe(1);

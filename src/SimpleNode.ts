@@ -20,20 +20,20 @@ import { IHGraph } from "./IHGraph";
 import { NamedElement } from "./NamedElement";
 import { TransformationEdge } from "./TransformationEdge";
 
-export enum SourceNodeStatus {
+export enum SimpleNodeStatus {
     UNDEFINED = "UNDEFINED",
     SUCCESS = "SUCCESS",
     WARNING = "WARNING",
     ERROR = "ERROR"
 }
 
-export type SourceNodeContent = undefined | string;
+export type SimpleNodeContent = undefined | string;
 
-export class SourceNode extends NamedElement implements EdgeReceiver {
+export class SimpleNode extends NamedElement implements EdgeReceiver {
     protected parent : IHGraph;
     protected id : string;
-    protected content : SourceNodeContent = undefined;
-    protected status : SourceNodeStatus = SourceNodeStatus.UNDEFINED;
+    protected content : SimpleNodeContent = undefined;
+    protected status : SimpleNodeStatus = SimpleNodeStatus.UNDEFINED;
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
 
@@ -43,8 +43,8 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         this.id = id;
     }
 
-    public clone(parent: IHGraph | null = null, edgeMapping: Map<TransformationEdge, TransformationEdge> | undefined = undefined): SourceNode {    
-        const clone = new SourceNode(parent ? parent : this.parent, this.id);
+    public clone(parent: IHGraph | null = null, edgeMapping: Map<TransformationEdge, TransformationEdge> | undefined = undefined): SimpleNode {    
+        const clone = new SimpleNode(parent ? parent : this.parent, this.id);
         for (const outgoingEdge of this.outgoingEdges) {
             const edgeClone = outgoingEdge.clone(clone);
             if (edgeMapping !== undefined) {
@@ -66,7 +66,7 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         return this.id;
     }
 
-    public getContent(): SourceNodeContent {
+    public getContent(): SimpleNodeContent {
         return this.content;
     }
 
@@ -77,7 +77,7 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         return this.content;
     }
 
-    public setContent(content: SourceNodeContent): void {
+    public setContent(content: SimpleNodeContent): void {
         this.content = content;
     }
 
@@ -85,11 +85,11 @@ export class SourceNode extends NamedElement implements EdgeReceiver {
         this.content += content;
     }
 
-    public getStatus(): SourceNodeStatus {
+    public getStatus(): SimpleNodeStatus {
         return this.status;
     }
 
-    public setStatus(status: SourceNodeStatus): void {
+    public setStatus(status: SimpleNodeStatus): void {
         this.status = status;
     }
 
