@@ -31,7 +31,7 @@ test("getImmediateCliqueMixed", () => {
     const graph = testGraphSCCharts();
     const abroNode = graph.getNodes()[0];
     const edgeType = graph.createEdgeType("SCCharts", 1);
-    const resultNode = graph.createSourceNode("Result");
+    const resultNode = graph.createSimpleNode("Result");
     const edge = graph.createTransformationEdge(edgeType, abroNode, resultNode);
 
     expect(graph).toBeDefined();

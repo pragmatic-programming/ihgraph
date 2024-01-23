@@ -101,7 +101,7 @@ export function createIHGraphFromJSONString(json: string) {
 
     // create nodes
     for (const node of parsedJSON.nodes) {
-        const newNode = ihGraph.createSourceNode(node.id);
+        const newNode = ihGraph.createSimpleNode(node.id);
         if (node.content) {
             newNode.setContent(node.content);
         }

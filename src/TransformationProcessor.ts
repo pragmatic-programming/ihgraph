@@ -23,7 +23,7 @@ export class TransformationProcessor extends Processor<IHGraph, IHGraph> {
 
     public createSingleResultNode(id: string): SimpleNode {
         const targetGraph = new IHGraph();
-        const sourceNode = targetGraph.createSourceNode(id);
+        const sourceNode = targetGraph.createSimpleNode(id);
         return sourceNode;
     }
 

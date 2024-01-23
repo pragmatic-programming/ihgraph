@@ -19,8 +19,8 @@ import { IHGraph } from "../../src/IHGraph";
 function testGraphHierarchy(): IHGraph {
     const nestedGraph = new IHGraph();
     
-    const node1 = nestedGraph.createSourceNode("Node1");
-    const node2 = nestedGraph.createSourceNode("Node2");
+    const node1 = nestedGraph.createSimpleNode("Node1");
+    const node2 = nestedGraph.createSimpleNode("Node2");
     const type1 = nestedGraph.createEdgeType("Type1", 26);
     nestedGraph.createTransformationEdge(type1, node1, node2);
 
@@ -58,7 +58,7 @@ test("checkTHGraphHierarchyParent", () => {
 test("checkTHGraphHierarchyPriority", () => {
     const thGraph = testGraphHierarchy();
 
-    const node1 = thGraph.createSourceNode("Node1");
+    const node1 = thGraph.createSimpleNode("Node1");
     const type2 = thGraph.createEdgeType("Type2", 2);
     const type12 = thGraph.createEdgeType("Type12", 12);
 
@@ -86,7 +86,7 @@ test("checkTHGraphSimpleCloneReferences", () => {
     const thGraph = testGraphHierarchy();
     const nestedGraph = thGraph.getNodes()[0] as IHGraph;
 
-    const node1 = thGraph.createSourceNode("Node1");
+    const node1 = thGraph.createSimpleNode("Node1");
     const type2 = thGraph.createEdgeType("Type", 2);
     const edge = thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!); 
     const clone = thGraph.clone();
@@ -119,7 +119,7 @@ test("checkTHGraphSimpleCloneComplete", () => {
     const thGraph = testGraphHierarchy();
     const nestedGraph = thGraph.getNodes()[0] as IHGraph;
 
-    const node1 = thGraph.createSourceNode("Node1");
+    const node1 = thGraph.createSimpleNode("Node1");
     const type2 = thGraph.createEdgeType("Type2", 2);
     const edge = thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!); 
     const [clone, nodeMapping, typeMapping, edgeMapping] = thGraph.cloneWithMappings();

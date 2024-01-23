@@ -21,8 +21,8 @@ import { TransformationProcessor } from "../../src/TransformationProcessor";
 function testGraphSimple(): IHGraph {
     const thGraph = new IHGraph();
     
-    const node1 = thGraph.createSourceNode("Node1");
-    const node2 = thGraph.createSourceNode("Node2");
+    const node1 = thGraph.createSimpleNode("Node1");
+    const node2 = thGraph.createSimpleNode("Node2");
     const type1 = thGraph.createEdgeType("Type1", 1);
     thGraph.createTransformationEdge(type1, node1, node2);
 

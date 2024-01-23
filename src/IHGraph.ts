@@ -88,7 +88,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @param id The name of the source node.
      * @returns The source node.
      */
-    public createSourceNode(id: string): SimpleNode {
+    public createSimpleNode(id: string): SimpleNode {
         const simpleNode: SimpleNode = new SimpleNode(this, id);
         this.nodes.push(simpleNode);
 

@@ -19,9 +19,9 @@ import { IHGraph } from "../../src/IHGraph";
 function testGraphClique(): IHGraph {
     const graph = new IHGraph();
     
-    const node1 = graph.createSourceNode("Node1");
-    const node2 = graph.createSourceNode("Node2");
-    const node3 = graph.createSourceNode("Node3");
+    const node1 = graph.createSimpleNode("Node1");
+    const node2 = graph.createSimpleNode("Node2");
+    const node3 = graph.createSimpleNode("Node3");
     const type1 = graph.createEdgeType("Type1", 1);
     const type2 = graph.createEdgeType("Type2", 2);
     graph.createTransformationEdge(type1, node1, node2);
@@ -33,8 +33,8 @@ function testGraphClique(): IHGraph {
 function testGraphClique2(): IHGraph {
     const graph = new IHGraph();
     
-    const node4 = graph.createSourceNode("Node4");
-    const node5 = graph.createSourceNode("Node5");
+    const node4 = graph.createSimpleNode("Node4");
+    const node5 = graph.createSimpleNode("Node5");
     const type3 = graph.createEdgeType("Type3", 3);
     graph.createTransformationEdge(type3, node4, node4);
 
@@ -44,8 +44,8 @@ function testGraphClique2(): IHGraph {
 function testGraphClique3(): IHGraph {
     const graph = new IHGraph();
     
-    const node6 = graph.createSourceNode("Node6");
-    const node7 = graph.createSourceNode("Node7");
+    const node6 = graph.createSimpleNode("Node6");
+    const node7 = graph.createSimpleNode("Node7");
     const type1 = graph.createEdgeType("Type1", 1);
     graph.createTransformationEdge(type1, node6, node7);
 
@@ -55,7 +55,7 @@ function testGraphClique3(): IHGraph {
 function testGraphClique4(): IHGraph {
     const graph = new IHGraph();
     
-    const node8 = graph.createSourceNode("Node8");
+    const node8 = graph.createSimpleNode("Node8");
 
     return graph;
 }

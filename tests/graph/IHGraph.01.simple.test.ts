@@ -46,8 +46,8 @@ test("checkTHGraphSimpleNodeByIdOrder", () => {
     const thGraph = testGraphSimple();
 
     // when
-    thGraph.createSourceNode("Node1");
-    thGraph.createSourceNode("Node1");
+    thGraph.createSimpleNode("Node1");
+    thGraph.createSimpleNode("Node1");
 
     // then
     expect(thGraph.getNodeById("Node1")).toBe(thGraph.getNodes()[0]);

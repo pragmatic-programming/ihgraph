@@ -36,7 +36,7 @@ function createTHGraph(rnd: DoomRand, depth: number): IHGraph {
             const hierarchyGraph = createTHGraph(rnd, depth + 1);
             thGraph.addNode(hierarchyGraph);
         } else {
-            thGraph.createSourceNode("Node" + i);
+            thGraph.createSimpleNode("Node" + i);
         }
     }
     for (let i = 0; i < typeCount; i++) {
