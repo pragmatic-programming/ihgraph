@@ -34,8 +34,6 @@ test("createTHGraphDemo01Create", () => {
     expect(thGraph.getEdges()[1].getSourceNode()).toBe(thGraph.getNodes()[1]);
     expect(thGraph.getEdges()[1].getTargetNode()).toBe(thGraph.getNodes()[2]);
     expect(thGraph.getEdges()[1].getType()).toBe(thGraph.getEdgeTypes()[0]);
-    expect(thGraph.getEdges()[0].getParent()).toBe(thGraph);
-    expect(thGraph.getEdges()[1].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[0].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[1].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[2].getParent()).toBe(thGraph);

@@ -19,7 +19,7 @@ export * from './Annotation';
 export * from './EdgeType';
 export * from './IHGraph';
 export * from './IHFactory';
-export * from './SourceNode';
+export * from './SimpleNode';
 export * from './TransformationEdge';
 export * from './TransformationConfiguration';
 export * from './TransformationProcessor';

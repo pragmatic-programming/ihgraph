@@ -14,19 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+
 import { IHGraph } from "./IHGraph";
-import { SourceNode } from "./SourceNode";
 import { Processor } from "@pragmatic-programming/kico";
+import { SimpleNode } from "./SimpleNode";
 
 export class TransformationProcessor extends Processor<IHGraph, IHGraph> {
 
-    public createSingleResultNode(id: string): SourceNode {
+    public createSingleResultNode(id: string): SimpleNode {
         const targetGraph = new IHGraph();
         const sourceNode = targetGraph.createSourceNode(id);
         return sourceNode;
     }
 
-    public createSingleStringResultNode(id: string, content: string): SourceNode {
+    public createSingleStringResultNode(id: string, content: string): SimpleNode {
         const sourceNode = this.createSingleResultNode(id);
         sourceNode.setContent(content);
         return sourceNode;

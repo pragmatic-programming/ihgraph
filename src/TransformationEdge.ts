@@ -17,27 +17,29 @@
 import { Annotatable } from "./Annotatable";
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
-import { SourceNode } from "./SourceNode";   
+import { EdgeReceiver } from "./EdgeReceiver";
 
 export class TransformationEdge extends Annotatable {
-    protected parent : IHNode;
     protected sourceNode: IHNode;
-    protected targetNode: IHNode;
-    protected type: EdgeType;
+    protected targetNode: IHNode | undefined;
+    protected type: EdgeType | undefined;
 
-    constructor(parent: IHNode, type: EdgeType, sourceNode: IHNode, targetNode: IHNode) {
+    constructor(type: EdgeType | undefined, sourceNode: IHNode, targetNode: IHNode | undefined) {
         super();
-        this.parent = parent;
         this.type = type;
         this.sourceNode = sourceNode;
         this.targetNode = targetNode;
 
         sourceNode.addOutgoingEdge(this);
-        targetNode.addIncomingEdge(this);
+        if (targetNode != undefined) {
+            targetNode.addIncomingEdge(this);
+        }
     }
 
-    public getParent(): IHNode {
-        return this.parent;
+    public clone(sourceNode: IHNode): TransformationEdge {
+        const clone = new TransformationEdge(undefined, sourceNode, undefined);
+        this.cloneAnnotationsTo(clone);
+        return clone;
     }
 
     public getSourceNode(): IHNode {
@@ -45,10 +47,16 @@ export class TransformationEdge extends Annotatable {
     }
 
     public getTargetNode(): IHNode {
+        if (this.targetNode === undefined) {
+            throw new Error("You cannot retrieve an undefined target node.");
+        }
         return this.targetNode;
     }
 
     public getType(): EdgeType {    
+        if (this.type === undefined) {
+            throw new Error("You cannot retrieve an undefined type.");
+        }
         return this.type;
     }
 
@@ -67,10 +75,8 @@ export class TransformationEdge extends Annotatable {
     }
 
     public remove(): void {
-        if (this.sourceNode instanceof SourceNode) {
-            this.sourceNode.removeOutgoingEdge(this);
-        }
-        if (this.targetNode instanceof SourceNode) {
+        this.sourceNode.removeOutgoingEdge(this);
+        if (this.targetNode !== undefined) {
             this.targetNode.removeIncomingEdge(this);
         }
     }

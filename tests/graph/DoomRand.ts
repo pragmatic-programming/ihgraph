@@ -16,7 +16,7 @@
 
 /*
     PRNG for TypeScript based on the original LUT from Doom.
-    As you guessed it: this is not a cryptographically secure. :-)
+    As you guessed it: this is not cryptographically secure. :-)
 */
 export class DoomRand {
 

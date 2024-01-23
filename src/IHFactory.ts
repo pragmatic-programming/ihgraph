@@ -17,13 +17,13 @@
 import { Annotatable } from "./Annotatable";
 import { Annotation } from "./Annotation";
 import { IHGraph } from "./IHGraph";
-import { SourceNodeContent } from "./SourceNode";
+import { SimpleNodeContent } from "./SimpleNode";
 
 export type AnnotationFactoryType = {[key: string]: any};
 
 export interface SourceNodeInterface {
     id: string
-    content?: SourceNodeContent
+    content?: SimpleNodeContent
     annotations?: AnnotationFactoryType
 }
 
@@ -49,9 +49,9 @@ export interface IHGraphFactoryInterface {
 
 export class SourceNodeFactoryClass extends Annotatable {
     id: string = "";
-    content: SourceNodeContent = undefined;
+    content: SimpleNodeContent = undefined;
 
-    constructor(id: string, content : SourceNodeContent) {
+    constructor(id: string, content : SimpleNodeContent) {
         super();
         this.id = id;
         this.content = content;

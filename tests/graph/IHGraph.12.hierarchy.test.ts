@@ -32,10 +32,8 @@ function testGraphHierarchy(): IHGraph {
 }
 
 test("createTHGraphHierarchy", () => {
-    // given
     const thGraph = testGraphHierarchy();
 
-    // then
     expect(thGraph.getNodes().length).toBe(1);
     expect(thGraph.getEdgeTypes().length).toBe(0);
     expect(thGraph.getEdges().length).toBe(0);
@@ -45,26 +43,21 @@ test("createTHGraphHierarchy", () => {
     expect(nestedGraph.getEdges()[0].getSourceNode()).toBe(nestedGraph.getNodes()[0]);
     expect(nestedGraph.getEdges()[0].getTargetNode()).toBe(nestedGraph.getNodes()[1]);
     expect(nestedGraph.getEdges()[0].getType()).toBe(nestedGraph.getEdgeTypes()[0]);
-    expect(nestedGraph.getEdges()[0].getParent()).toBe(nestedGraph);
     expect(nestedGraph.getNodes()[0].getParent()).toBe(nestedGraph);
     expect(nestedGraph.getNodes()[1].getParent()).toBe(nestedGraph);
     expect(nestedGraph.getEdgeTypes()[0].getPriority()).toBe(26);
 });
 
 test("checkTHGraphHierarchyParent", () => {
-    // given
     const thGraph = testGraphHierarchy();
 
-    // then
     expect(thGraph.getNodes()[0]).toBeInstanceOf(IHGraph);
     expect(thGraph.getNodes()[0].getParent()).toBe(thGraph);
 });
 
 test("checkTHGraphHierarchyPriority", () => {
-    // given
     const thGraph = testGraphHierarchy();
 
-    // when
     const node1 = thGraph.createSourceNode("Node1");
     const type2 = thGraph.createEdgeType("Type2", 2);
     const type12 = thGraph.createEdgeType("Type12", 12);
@@ -74,19 +67,15 @@ test("checkTHGraphHierarchyPriority", () => {
     thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!);
     thGraph.createTransformationEdge(type12, node1, thGraph.getNodes()[0]!);
 
-    // then
     expect(thGraph.getHighestDeepPriority()).toBe(26);
 });
 
 test("checkTHGraphHierarchyCloneSizes", () => {
-    // given
     const thGraph = testGraphHierarchy();
 
-    // when
     const clone = thGraph.clone();
     const nestedGraph = clone.getNodes()[0] as IHGraph;
 
-    // then
     expect(nestedGraph).toBeInstanceOf(IHGraph);
     expect(nestedGraph.getNodes().length).toBe(2);
     expect(nestedGraph.getEdgeTypes().length).toBe(1);
@@ -94,18 +83,15 @@ test("checkTHGraphHierarchyCloneSizes", () => {
 });
     
 test("checkTHGraphSimpleCloneReferences", () => {
-    // given
     const thGraph = testGraphHierarchy();
     const nestedGraph = thGraph.getNodes()[0] as IHGraph;
 
-    // when
     const node1 = thGraph.createSourceNode("Node1");
     const type2 = thGraph.createEdgeType("Type", 2);
     const edge = thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!); 
     const clone = thGraph.clone();
-    const nestedCloneGraph = clone.getNodes()[0] as IHGraph;
+    const nestedCloneGraph = clone.getGraphNodes()[0] as IHGraph;
 
-    // then
     expect(nestedGraph).toBeInstanceOf(IHGraph);
     expect(nestedCloneGraph).toBeInstanceOf(IHGraph);
 
@@ -130,18 +116,15 @@ test("checkTHGraphSimpleCloneReferences", () => {
 });
     
 test("checkTHGraphSimpleCloneComplete", () => {
-    // given
     const thGraph = testGraphHierarchy();
     const nestedGraph = thGraph.getNodes()[0] as IHGraph;
 
-    // when
     const node1 = thGraph.createSourceNode("Node1");
     const type2 = thGraph.createEdgeType("Type2", 2);
     const edge = thGraph.createTransformationEdge(type2, node1, thGraph.getNodes()[0]!); 
-    const [clone, nodeMapping, edgeMapping, typeMapping] = thGraph.cloneWithMappings();
-    const nestedCloneGraph = clone.getNodes()[0] as IHGraph;
+    const [clone, nodeMapping, typeMapping, edgeMapping] = thGraph.cloneWithMappings();
+    const nestedCloneGraph = clone.getGraphNodes()[0] as IHGraph;
 
-    // then
     expect(nestedGraph).toBeInstanceOf(IHGraph);
     expect(nestedCloneGraph).toBeInstanceOf(IHGraph);
 
@@ -163,7 +146,6 @@ test("checkTHGraphSimpleCloneComplete", () => {
         expect(nodeMapping.get(edge.getSourceNode())).toBe(mappedEdge!.getSourceNode());
         expect(nodeMapping.get(edge.getTargetNode())).toBe(mappedEdge!.getTargetNode());
         expect(typeMapping.get(edge.getType())).toBe(mappedEdge!.getType());
-        expect(mappedEdge!.getParent()).toBe(clone);
     });
     nestedGraph.getNodes().forEach((node, index) => {
         const mappedNode = nodeMapping.get(node);
@@ -183,7 +165,6 @@ test("checkTHGraphSimpleCloneComplete", () => {
         expect(nodeMapping.get(edge.getSourceNode())).toBe(mappedEdge!.getSourceNode());
         expect(nodeMapping.get(edge.getTargetNode())).toBe(mappedEdge!.getTargetNode());
         expect(typeMapping.get(edge.getType())).toBe(mappedEdge!.getType());
-        expect(mappedEdge!.getParent()).toBe(nestedCloneGraph);
     });
 });
     

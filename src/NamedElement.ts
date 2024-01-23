@@ -18,6 +18,7 @@ import { Annotatable } from "./Annotatable";
 
 export class NamedElement extends Annotatable {
     protected id: string;
+    protected _uid: string = "";
 
     constructor(id: string = "") {
         super();
@@ -26,23 +27,34 @@ export class NamedElement extends Annotatable {
         } else {
             this.id = id;
         }
+        this.calculateUID();
     }
-    
+
     getId(): string {
         return this.id;
     }
     
     setId(id: string): void {
         this.id = id;
+        this.calculateUID();
     }
-
+    
+    protected calculateUID(): string {
+        this._uid = `${this.getId()} (${this.getHashCode()})`
+        return this._uid;
+    }
+    
     getIdHashCode(): string {
-        return `${this.getId()} (${this.getHashCode()})`;
+        return this._uid;
     }
 
     public cloneTo(target: NamedElement): void {
         super.cloneTo(target);
         target.id = this.id;
+    }
+
+    public equals(other: NamedElement): boolean {
+        return this.getId() === other.getId();
     }
 }
 

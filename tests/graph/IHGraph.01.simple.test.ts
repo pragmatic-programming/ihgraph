@@ -27,7 +27,6 @@ test("createTHGraphSimple", () => {
     expect(thGraph.getEdges()[0].getSourceNode()).toBe(thGraph.getNodes()[0]);
     expect(thGraph.getEdges()[0].getTargetNode()).toBe(thGraph.getNodes()[1]);
     expect(thGraph.getEdges()[0].getType()).toBe(thGraph.getEdgeTypes()[0]);
-    expect(thGraph.getEdges()[0].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[0].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[1].getParent()).toBe(thGraph);
     expect(thGraph.getEdgeTypes()[0].getPriority()).toBe(1);
