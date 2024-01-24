@@ -186,8 +186,8 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Retrieve all source nodes of the graph. Source nodes to not have incoming edges.
      * @returns A list of source nodes without incoming edges.
      */
-    public getSource2Nodes(): SimpleNode[] {
-        return this.getSource2Nodes().filter((node) => node.getIncomingEdges().length === 0);
+    public getSourceNodes2(): SimpleNode[] {
+        return this.getSimpleNodes().filter((node) => node.getIncomingEdges().length === 0);
     }
 
     /**
