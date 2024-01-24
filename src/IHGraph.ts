@@ -951,6 +951,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
     public cloneWithMappings(nodes: IHNode[] = [], types: EdgeType[] = []): [IHGraph, Map<IHNode, IHNode>,  Map<EdgeType, EdgeType>, Map<TransformationEdge, TransformationEdge>] {
         const clone: IHGraph = new IHGraph();
         this.cloneTo(clone);
+        clone.transformationConfiguration = this.transformationConfiguration.clone();
 
         // Since the edges are contained in the nodes, we have to create all nodes first, to re-route the edges with the correct type.
         // The return mappings also contain the mappings of nested IHNodes.

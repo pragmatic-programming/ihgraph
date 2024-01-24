@@ -17,32 +17,28 @@
 import { EdgeType } from "./EdgeType";
 import { TransformationProcessor } from "./TransformationProcessor";
 
-export class TransformationConfiguration {
-    protected mapping: Map<EdgeType, typeof TransformationProcessor>;
+export class TransformationConfiguration extends Map<EdgeType, typeof TransformationProcessor> {
 
     constructor() {
-        this.mapping = new Map<EdgeType, typeof TransformationProcessor>();
+        super();
     }
 
-    public getTransformationConfiguration(): Map<EdgeType, typeof TransformationProcessor> {
-        return this.mapping;
+    public clone(): TransformationConfiguration {
+        const clone = new TransformationConfiguration();
+
+        for (const [key, value] of this.entries()) {
+            clone.set(key, value);
+        }
+
+        return clone;
     }
 
     public get(edgeType: EdgeType): typeof TransformationProcessor | undefined {
-        //     const value = [...this.mapping.entries()].find(
-        //         ([key, val]) => key.getId() === edgeType.getId())?.[1];
-
-        //     return value;
-        // }
-        for (const [key, value] of this.mapping.entries()) {
+        for (const [key, value] of this.entries()) {
             if (key.getId() === edgeType.getId()) {
                 return value;
             }
         }
-    }
-
-    public set(edgeType: EdgeType, processor: typeof TransformationProcessor): void {
-        this.mapping.set(edgeType, processor);
     }
 
     public setById(edgeTypeId: string, processor: typeof TransformationProcessor): void {

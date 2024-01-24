@@ -45,3 +45,14 @@ test("transformationConfigurationById", () => {
 
     expect(thGraph.getTransformationConfiguration().get(edgeType))?.toBe(Sequence);
 });
+
+test("transformationConfigurationClone", () => {
+    const thGraph = testGraphSimple();
+    thGraph.getTransformationConfiguration().set(thGraph.getEdgeTypes()[0], Sequence);
+    const edgeType = new EdgeType("Type1", 1);
+    
+    const clone = thGraph.clone();
+
+    expect(Array.of(clone.getTransformationConfiguration().keys()).length).toBe(1);
+    expect(clone.getTransformationConfiguration().get(edgeType)).toBe(Sequence);
+});
