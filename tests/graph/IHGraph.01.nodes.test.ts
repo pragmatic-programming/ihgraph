@@ -14,6 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
+import { SimpleNode } from "../../src/SimpleNode";
 import { testGraphSequenceExecuteNothing, testGraphSimple } from "./TestGraphs";
 
 test("createTHGraphSimple", () => {
@@ -80,4 +81,33 @@ test("checkSinkNodes", () => {
     expect(sinkNodes.length).toBe(2);
     expect(sinkNodes).toContain(graph.getNodeById("Result"));
     expect(sinkNodes).toContain(graph.getNodeById("Nothing"));
+});
+
+test("checkNodesContentString", () => {
+    const graph = testGraphSequenceExecuteNothing();
+
+    const addNode = graph.getNodeById("Add");
+
+    expect(addNode).toBeDefined();
+    expect(addNode).toBeInstanceOf(SimpleNode);
+
+    (addNode as SimpleNode).appendContent("\nx + 2");
+
+    expect((addNode as SimpleNode).getContentAsString()).toBe("x + 2\nx + 2");
+});
+
+test("checkNodesContentStringUndefined", () => {
+    const graph = testGraphSequenceExecuteNothing();
+
+    const nothingNode = graph.getNodeById("Nothing") as SimpleNode;
+
+    expect(nothingNode).toBeDefined();
+
+    nothingNode.setContent(undefined);
+
+    expect(nothingNode.getContent()).toBeUndefined();
+
+    nothingNode.appendContent("x + 2");
+
+    expect(nothingNode.getContent()).toBe("x + 2");
 });

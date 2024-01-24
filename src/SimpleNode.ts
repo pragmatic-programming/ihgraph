@@ -14,7 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { Annotatable } from "./Annotatable";
 import { EdgeReceiver } from "./EdgeReceiver";
 import { IHGraph } from "./IHGraph";
 import { NamedElement } from "./NamedElement";
@@ -82,6 +81,9 @@ export class SimpleNode extends NamedElement implements EdgeReceiver {
     }
 
     public appendContent(content: string): void {
+        if (this.content === undefined) {
+            this.content = "";
+        }
         this.content += content;
     }
 
