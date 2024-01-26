@@ -24,6 +24,8 @@ import { TransformationConfiguration } from "./TransformationConfiguration";
 import { TransformationProcessor } from "./TransformationProcessor";
 import { EdgeFactoryClass, EdgeTypeFactoryClass, FactoryObjectClass, SourceNodeFactoryClass } from "./IHFactory";
 import { KicoCloneable } from "@pragmatic-programming/kico";
+import assert = require("assert");
+import { ConsistencyError } from "./ConsistencyError";
 
 export type IHNode = SimpleNode | IHGraph;
 
@@ -73,6 +75,14 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      */
     public getParent(): IHGraph | undefined {
         return this.parent;
+    }
+
+    /**
+     * Set a new parent graph.
+     * @param parent The parent.
+     */
+    public setParent(parent: IHGraph): void {
+        this.parent = parent;
     }
 
 
@@ -135,7 +145,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns A list of nodes of the graph.
      */
     public getNodes(): IHNode[] {
-        return this.nodes;
+        return [...this.nodes];
     }
 
     /**
@@ -243,9 +253,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      */
     public addNode(node: IHNode) {
         this.nodes.push(node);
-        if (node instanceof IHGraph) {
-            node.parent = this;
-        }
+        node.setParent(this);
     }
 
     /**
@@ -256,6 +264,12 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         const index = this.nodes.indexOf(node);
         if (index > -1) {
             this.nodes.splice(index, 1);
+        }
+        for (const edge of node.getOutgoingEdges()) {
+            edge.getTargetNode().removeIncomingEdge(edge);
+        }
+        for (const edge of node.getIncomingEdges()) {
+            edge.getSourceNode().removeOutgoingEdge(edge);
         }
     }
 
@@ -285,7 +299,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns A list of incoming edges.
      */
     public getIncomingEdges(): TransformationEdge[] {
-        return this.incomingEdges;
+        return [...this.incomingEdges];
     }
 
     /**
@@ -293,7 +307,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns A list of outgoing edges.
      */
     public getOutgoingEdges(): TransformationEdge[] {
-        return this.outgoingEdges;
+        return [...this.outgoingEdges];
     }
 
     /**
@@ -409,7 +423,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns A list of edge types.
      */
     public getEdgeTypes(): EdgeType[] {
-        return this.edgeTypes;
+        return [...this.edgeTypes];
     }
 
     /**
@@ -503,6 +517,41 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         return edges.map((val) => val.getType().getPriority()).reduce((prev, curr) => (prev < curr) ? curr : prev, 0);
     }
 
+    /**
+     * Removes specific edge type from the graph.
+     * @param edgeType The edge type that should be removed from the graph.
+     */
+    public removeEdgeType(edgeType: EdgeType): void {
+        const index = this.edgeTypes.indexOf(edgeType);
+        if (index > -1) {
+            this.edgeTypes.splice(index, 1);
+        }
+    }
+
+    /**
+     * Removes unused edges types from and adds missing edge types to the graph.
+     */
+    public revalidateEdgeTypes(): void {
+        const edges = this.getEdges();
+        const edgeTypes = this.getEdgeTypes();
+
+        for (const edgeType of edgeTypes) {
+            if (!edges.some((val) => val.getType() === edgeType)) {
+                this.removeEdgeType(edgeType);
+            }
+        }
+
+        for (const edge of edges) {
+            if (!this.hasEdgeType(edge.getType())) {
+                this.addEdgeType(edge.getType());
+            } else {
+                const concreteEdgeType = this.getShallowEdgeType(edge.getType());
+                edge.setType(concreteEdgeType);
+            }
+        }
+
+        // TODO: Fold similar edge types.
+    }
 
 
     /****************************************
@@ -584,30 +633,37 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
 
     /**
      * Adds a clique to the graph. All nodes and edges are added to the graph. The enclosing node is ignored.
-     * The nodes are added are added as they are and not cloned beforehand.
+     * The nodes are added as they are and not cloned beforehand.
      * @param clique The clique that contains the nodes and edges that should be added to the graph.
      */
     public addClique(clique: IHGraph): void {
         // Add all nodes and edges from the clique to the graph
-        const cliqueNodes = clique.getDeepNodes();
-        const cliqueEdges = clique.getDeepEdges();
+        const cliqueNodes = clique.getNodes();
+        const cliqueEdges = clique.getEdges();
 
         cliqueNodes.forEach((val) => {
-            this.nodes.push(val);
+            this.addNode(val);
         });
 
         const edgeTypeMap = new Map<EdgeType, EdgeType>();
-        clique.getEdgeTypes().forEach((val) => {
-            const edgeType = this.getEdgeTypeById(val.getId()!);
-            if (edgeType == undefined) {
-                const newEdgeType = this.createEdgeType(val.getId()!, val.getPriority());
-                edgeTypeMap.set(val, newEdgeType);
+        for (const edgeType of clique.getEdgeTypes()) {
+            const graphEdgeType = this.getEdgeTypeById(edgeType.getId()!);
+            if (graphEdgeType == undefined) {
+                const newEdgeType = this.createEdgeType(edgeType.getId(), edgeType.getPriority());
+                newEdgeType.setImmediate(edgeType.isImmediate());
+                edgeTypeMap.set(edgeType, newEdgeType);
             } else {
-                edgeTypeMap.set(val, edgeType);
+                edgeTypeMap.set(edgeType, graphEdgeType);
             }
-        });
+        }
 
+        for (const edge of cliqueEdges) {
+            edge.setType(edgeTypeMap.get(edge.getType())!);
+        }
 
+        this.revalidateEdgeTypes();
+
+        assert(this.consistency());
     }
 
     /**
@@ -654,13 +710,22 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
 
         this.removeClique(clique);
 
-        if (replacement.getDeepNodes().length < 1) return [externalSourceEdges, externalTargetEdges];
+        if (replacement.getNodes().length < 1) return [externalSourceEdges, externalTargetEdges];
 
         if (addCliqueNodes) {
             this.addClique(replacement);
+            
+            externalSourceEdges.forEach((val) => {
+                val.setSourceNode(val.getSourceNode()); // Re-set the source node because the outgoing edge was removed though the clique removal.
+                val.setTargetNode(sourceEdgesTargets.get(val)!); 
+            });
+            externalTargetEdges.forEach((val) => { 
+                val.setSourceNode(targetEdgesSources.get(val)!); 
+                val.setTargetNode(val.getTargetNode()); // Re-set the target node because the incoming edge was removed though the clique removal.
+            });
+            this.revalidateEdgeTypes();
 
-            externalSourceEdges.forEach((val) => { val.setTargetNode(sourceEdgesTargets.get(val)!); });
-            externalTargetEdges.forEach((val) => { val.setSourceNode(targetEdgesSources.get(val)!); });
+            assert(this.consistency());
         }
 
         return [externalSourceEdges, externalTargetEdges];
@@ -682,6 +747,9 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
             this.removeNodeById(val.getId()!);
         });
 
+        this.revalidateEdgeTypes();
+
+        assert(this.consistency());
     }
 
 
@@ -753,7 +821,9 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         });
         graph.addNode(cliqueGraph);
 
-        return graph.getInducedHierarchy(maxIterations, iteration);
+        const newGraph = graph.getInducedHierarchy(maxIterations, iteration);
+        assert(newGraph);
+        return newGraph;
     }
 
     /**
@@ -818,6 +888,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
             graph.removeNode(graphNode);
         }
 
+        assert(graph);
         return graph;
     }
 
@@ -1032,6 +1103,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         typeMapping.forEach((val, key) => returnTypeMapping.set(key, val));
         edgeMapping.forEach((val, key) => returnEdgeMapping.set(key, val));
 
+        assert(clone.consistency())
         return [clone, returnNodeMapping, returnTypeMapping, returnEdgeMapping];
     }
 
@@ -1137,4 +1209,62 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
 
         return str;
     }
+
+    /**
+     * Consistency check for the graph to be used in assertions.
+     * Mainly used in internal operations and debugging.
+     * @returns true if everything is consistent.
+     */
+    protected consistency(): boolean {
+        const nodes = this.getNodes();
+        const edges = this.getEdges();
+        const edgeTypes = this.getEdgeTypes();
+
+        for (const node of nodes) {
+            if (node instanceof IHGraph) {
+                assert(node.consistency())
+            }
+            if (node.getParent() !== this) {
+                throw new ConsistencyError(`The node ${node.getIdHashCode()} does not have the correct parent!`)
+            }
+            for (const edge of node.getOutgoingEdges()) {
+                if (!edges.includes(edge)) {
+                    throw new ConsistencyError(`An outgoing edge of the node ${node.getIdHashCode()} is not included in the graph!`)
+                }
+            }
+            for (const edge of node.getIncomingEdges()) {
+                if (!edges.includes(edge)) {
+                    throw new ConsistencyError(`An incoming edge of the node ${node.getIdHashCode()} is not included in the graph!`)
+                }
+            }
+        }
+
+        for (const edge of edges) {
+            if (!nodes.includes(edge.getSourceNode())) {
+                throw new ConsistencyError(`The source node ${edge.getSourceNode().getIdHashCode()} of an edge is not included in the graph!`)
+            }
+            if (!nodes.includes(edge.getTargetNode())) {
+                throw new ConsistencyError(`The target node ${edge.getTargetNode().getIdHashCode()} of an edge is not included in the graph!`)
+            } 
+            if (!edgeTypes.includes(edge.getType())) {
+                throw new ConsistencyError(`The edge type ${edge.getType().getIdHashCode()} of an edge is not included in the graph!`)
+            } 
+            if (!edge.getSourceNode().getOutgoingEdges().includes(edge)) {
+                console.log(this.toStringDebugGraph());
+                throw new ConsistencyError(`The source node ${edge.getSourceNode().getIdHashCode()} of an edge does not reference the edge as outgoing edge!`)
+            }
+            if (!edge.getTargetNode().getIncomingEdges().includes(edge)) {
+                throw new ConsistencyError(`The target node ${edge.getTargetNode().getIdHashCode()} of an edge does not reference the edge as incoming edge!`)
+            }
+        }
+
+        for (const edgeType of edgeTypes) {
+            if (!edges.some((edge) => edge.getType() === edgeType)) {
+                throw new ConsistencyError(`The edge type ${edgeType.getIdHashCode()} is not used by any edge!`)
+            }
+        }
+ 
+        return true;
+    }
+    
 }

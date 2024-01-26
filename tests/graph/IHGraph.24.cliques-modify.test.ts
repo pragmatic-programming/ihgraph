@@ -87,13 +87,14 @@ test("removeClique", () => {
 
     graph.removeClique(clique);
 
-    expect(graph.getDeepNodes().length).toBe(1);
-    expect(graph.getDeepEdges().length).toBe(1);
-    expect(graph.getDeepNodes()).toContain(node1);
-    expect(graph.getDeepEdges()).toContain(edge1);
-    expect(graph.getDeepNodes()).not.toContain(node2);
-    expect(graph.getDeepNodes()).not.toContain(node3);    
-    expect(graph.getDeepEdges()).not.toContain(edge2);
+    expect(graph.getNodes().length).toBe(1);
+    // If one of the edge's nodes is removed, the edge is removed as well.
+    expect(graph.getEdges().length).toBe(0); 
+    expect(graph.getNodes()).toContain(node1);
+    expect(graph.getNodes()).not.toContain(node2);
+    expect(graph.getNodes()).not.toContain(node3);
+    expect(graph.getEdges()).not.toContain(edge1);
+    expect(graph.getEdges()).not.toContain(edge2);
 });
 
 test("addClique", () => {
@@ -117,7 +118,7 @@ test("addClique", () => {
     expect(graph.getEdgeTypes().map(type => type.getId())).toContain("Type3");
 });
 
-test("addClique", () => {
+test("addClique2", () => {
     const graph = testGraphClique();
     const clique = testGraphClique3();
 
