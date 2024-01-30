@@ -1214,7 +1214,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Mainly used in internal operations and debugging.
      * @returns true if everything is consistent.
      */
-    protected consistency(): boolean {
+    public consistency(): boolean {
         const nodes = this.getNodes();
         const edges = this.getEdges();
         const edgeTypes = this.getEdgeTypes();

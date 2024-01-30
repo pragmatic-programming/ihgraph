@@ -16,6 +16,7 @@
 
 export * from './Annotatable';
 export * from './Annotation';
+export * from './Assert';
 export * from './EdgeType';
 export * from './IHGraph';
 export * from './IHFactory';
