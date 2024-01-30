@@ -14,7 +14,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-
 import { EdgeReceiver } from "./EdgeReceiver";
 import { EdgeType } from "./EdgeType";
 import { getIds, NamedElement } from "./NamedElement";
@@ -24,8 +23,8 @@ import { TransformationConfiguration } from "./TransformationConfiguration";
 import { TransformationProcessor } from "./TransformationProcessor";
 import { EdgeFactoryClass, EdgeTypeFactoryClass, FactoryObjectClass, SourceNodeFactoryClass } from "./IHFactory";
 import { KicoCloneable } from "@pragmatic-programming/kico";
-import assert = require("assert");
 import { ConsistencyError } from "./ConsistencyError";
+import { assert } from "./Assert";
 
 export type IHNode = SimpleNode | IHGraph;
 
@@ -822,7 +821,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         graph.addNode(cliqueGraph);
 
         const newGraph = graph.getInducedHierarchy(maxIterations, iteration);
-        assert(newGraph);
+        assert(newGraph.consistency());
         return newGraph;
     }
 
@@ -888,7 +887,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
             graph.removeNode(graphNode);
         }
 
-        assert(graph);
+        assert(graph.consistency());
         return graph;
     }
 
