@@ -1106,6 +1106,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         return [clone, returnNodeMapping, returnTypeMapping, returnEdgeMapping];
     }
 
+    public clear(): IHGraph {
+        this.nodes = [];
+        return this;
+    }
 
 
     /****************************************
