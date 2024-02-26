@@ -14,11 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { IHGraph } from "../../src/IHGraph";
+import { IHGraph } from "../../src";
 
 function testGraphClique(): IHGraph {
     const graph = new IHGraph();
-    
+
     const node1 = graph.createSimpleNode("Node1");
     const node2 = graph.createSimpleNode("Node2");
     const node3 = graph.createSimpleNode("Node3");
@@ -32,7 +32,7 @@ function testGraphClique(): IHGraph {
 
 function testGraphClique2(): IHGraph {
     const graph = new IHGraph();
-    
+
     const node4 = graph.createSimpleNode("Node4");
     const node5 = graph.createSimpleNode("Node5");
     const type3 = graph.createEdgeType("Type3", 3);
@@ -43,7 +43,7 @@ function testGraphClique2(): IHGraph {
 
 function testGraphClique3(): IHGraph {
     const graph = new IHGraph();
-    
+
     const node6 = graph.createSimpleNode("Node6");
     const node7 = graph.createSimpleNode("Node7");
     const type1 = graph.createEdgeType("Type1", 1);
@@ -54,7 +54,7 @@ function testGraphClique3(): IHGraph {
 
 function testGraphClique4(): IHGraph {
     const graph = new IHGraph();
-    
+
     const node8 = graph.createSimpleNode("Node8");
 
     return graph;
@@ -68,13 +68,13 @@ test("removeClique", () => {
     const node2 = graph.getNodeById("Node2");
     const node3 = graph.getNodeById("Node3");
     const type2 = graph.getEdgeTypeById("Type2");
-    
+
     expect(node1).toBeDefined();
     expect(node2).toBeDefined();
     expect(node3).toBeDefined();
     expect(type1).toBeDefined();
     expect(type2).toBeDefined();
- 
+
     const edge1 = node1!.getOutgoingEdges()[0];
     const edge2 = node2!.getOutgoingEdges()[0];
 
@@ -89,7 +89,7 @@ test("removeClique", () => {
 
     expect(graph.getNodes().length).toBe(1);
     // If one of the edge's nodes is removed, the edge is removed as well.
-    expect(graph.getEdges().length).toBe(0); 
+    expect(graph.getEdges().length).toBe(0);
     expect(graph.getNodes()).toContain(node1);
     expect(graph.getNodes()).not.toContain(node2);
     expect(graph.getNodes()).not.toContain(node3);
@@ -148,7 +148,7 @@ test("replaceClique", () => {
     expect(replacement).toBeDefined();
 
     graph.replaceClique(clique, replacement);
-    
+
     expect(graph.getDeepNodes().length).toBe(2);
     expect(graph.getDeepEdges().length).toBe(1);
 

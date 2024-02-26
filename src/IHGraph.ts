@@ -112,9 +112,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns The new edge.
      */
     public createTransformationEdge(type: EdgeType, sourceNode: IHNode, targetNode: IHNode): TransformationEdge {
-        const transformationEdge: TransformationEdge = new TransformationEdge(type, sourceNode, targetNode);
-
-        return transformationEdge;
+        return new TransformationEdge(type, sourceNode, targetNode);
     }
 
     /**
@@ -591,9 +589,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
             });
         }
 
-        const clique = this.cloneWithMappings(visited, [edgeType])[0];
-
-        return clique;
+        return this.cloneWithMappings(visited, [edgeType])[0];
     }
 
     /**
@@ -624,7 +620,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
                     const clique = this.getClique(node, type);
                     cliques.push(clique);
                 }
-            };
+            }
         }
 
         return cliques;
@@ -763,7 +759,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Creates a new graph with induced hierarchy. Therefore, hierarchical graph nodes are introduced for each unique clique.
      * Edges of nodes that are moved inside the hierarchy will be re-routed to the new graph node.
      * @param maxIterations The maximum number of iterations. Default is 100.
-     * @param iterations The current iteration of the induced hierarchy. Used for recursion. Default is 0.
+     * @param iteration The current iteration of the induced hierarchy. Used for recursion. Default is 0.
      * @returns A new graph with induced hierarchy.
      */
     public getInducedHierarchy(maxIterations: number = 100, iteration: number = 0): IHGraph {
@@ -944,7 +940,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Checks whether or not the graph is equal to another graph.
      * A graph is equal to another graph or clique if all nodes (ids), edge types, and edges are the same.
      * The order of the nodes and edges does not matter.
-     * @param graph The graph that should be compared to this graph.
+     * @param other The graph that should be compared to this graph.
      * @returns True if the graphs are equal.
      * @override
      */

@@ -14,11 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { IHGraph } from "../../src/IHGraph";
+import { IHGraph } from "../../src";
 
 test("removeEdgeType", () => {
     const graph = new IHGraph();
-    
+
     graph.createSimpleNode("Node1");
     const type1 = graph.createEdgeType("Type1", 1);
 
@@ -31,7 +31,7 @@ test("removeEdgeType", () => {
 
 test("reduceEdgeType", () => {
     const graph = new IHGraph();
-    
+
     graph.createSimpleNode("Node1");
     graph.createEdgeType("Type1", 1);
 
@@ -44,7 +44,7 @@ test("reduceEdgeType", () => {
 
 test("reduceEdgeTypeRemaining", () => {
     const graph = new IHGraph();
-    
+
     const node1 = graph.createSimpleNode("Node1");
     const node2 = graph.createSimpleNode("Node2");
     const type1 = graph.createEdgeType("Type1", 1);

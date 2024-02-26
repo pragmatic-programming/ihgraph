@@ -17,7 +17,6 @@
 import { Annotatable } from "./Annotatable";
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
-import { EdgeReceiver } from "./EdgeReceiver";
 
 export class TransformationEdge extends Annotatable {
     protected sourceNode: IHNode;
@@ -53,7 +52,7 @@ export class TransformationEdge extends Annotatable {
         return this.targetNode;
     }
 
-    public getType(): EdgeType {    
+    public getType(): EdgeType {
         if (this.type === undefined) {
             throw new Error("You cannot retrieve an undefined type.");
         }
