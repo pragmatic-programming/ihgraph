@@ -26,7 +26,7 @@ test("checkTHGraphSimpleCloneSizes", () => {
     // then
     expect(clone.getNodes().length).toBe(2);
     expect(clone.getEdgeTypes().length).toBe(1);
-    expect(clone.getEdges().length).toBe(1);
+    expect(clone.getAllEdges().length).toBe(1);
 });
     
 test("checkTHGraphSimpleCloneReferences", () => {
@@ -43,8 +43,8 @@ test("checkTHGraphSimpleCloneReferences", () => {
     thGraph.getEdgeTypes().forEach((type, index) => {
         expect(type).not.toBe(clone.getEdgeTypes()[index]);
     });
-    thGraph.getEdges().forEach((edge, index) => {
-        expect(edge).not.toBe(clone.getEdges()[index]);
+    thGraph.getAllEdges().forEach((edge, index) => {
+        expect(edge).not.toBe(clone.getAllEdges()[index]);
     });
 });
     
@@ -61,8 +61,8 @@ test("checkTHGraphSimpleCloneComplete", () => {
     // then
     expect(cloneNode1).toBeDefined();
     expect(cloneNode2).toBeDefined();
-    expect(clone.getEdges()[0].getSourceNode()).toBe(cloneNode1);
-    expect(clone.getEdges()[0].getTargetNode()).toBe(cloneNode2);
-    expect(clone.getEdges()[0].getType().getPriority()).toBe(thGraph.getEdges()[0].getType().getPriority());
+    expect(clone.getAllEdges()[0].getSourceNode()).toBe(cloneNode1);
+    expect(clone.getAllEdges()[0].getTargetNode()).toBe(cloneNode2);
+    expect(clone.getAllEdges()[0].getType().getPriority()).toBe(thGraph.getAllEdges()[0].getType().getPriority());
 });
     

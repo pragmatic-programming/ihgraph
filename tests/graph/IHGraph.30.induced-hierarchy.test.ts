@@ -92,5 +92,5 @@ test("inducedHierarchyDepth2", () => {
     expect(nestedGraphNodes[0].getOutgoingEdges()[0].getTargetNode()).toBe(resultNode);
     expect(graphNodes[0].getOutgoingEdges().length).toBe(1);
     expect(graphNodes[0].getOutgoingEdges()[0].getTargetNode()).toBe(nothingNode);
-    expect(inducedHierarchyGraph.getEdges().length).toBe(1);
+    expect(inducedHierarchyGraph.getAllEdges().length).toBe(1);
 })

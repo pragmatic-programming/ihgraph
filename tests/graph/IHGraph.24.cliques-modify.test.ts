@@ -89,12 +89,12 @@ test("removeClique", () => {
 
     expect(graph.getNodes().length).toBe(1);
     // If one of the edge's nodes is removed, the edge is removed as well.
-    expect(graph.getEdges().length).toBe(0);
+    expect(graph.getAllEdges().length).toBe(0);
     expect(graph.getNodes()).toContain(node1);
     expect(graph.getNodes()).not.toContain(node2);
     expect(graph.getNodes()).not.toContain(node3);
-    expect(graph.getEdges()).not.toContain(edge1);
-    expect(graph.getEdges()).not.toContain(edge2);
+    expect(graph.getAllEdges()).not.toContain(edge1);
+    expect(graph.getAllEdges()).not.toContain(edge2);
 });
 
 test("addClique", () => {

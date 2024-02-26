@@ -20,18 +20,18 @@ test("removeEdge", () => {
     const graph = testGraphSequenceExecute();
 
     expect(graph).toBeDefined();
-    expect(graph.getEdges().length).toBe(2);
+    expect(graph.getAllEdges().length).toBe(2);
     expect(graph.getDeepEdges().length).toBe(2);
 
-    const edge = graph.getEdges()[0];
+    const edge = graph.getAllEdges()[0];
     graph.removeEdge(edge);
 
-    expect(graph.getEdges().length).toBe(1);
+    expect(graph.getAllEdges().length).toBe(1);
     expect(graph.getDeepEdges().length).toBe(1);
     
     const graphClone = graph.clone();
 
-    expect(graphClone.getEdges().length).toBe(1);
+    expect(graphClone.getAllEdges().length).toBe(1);
     expect(graphClone.getDeepEdges().length).toBe(1);
     expect(graphClone).toBeDefined();
 });
@@ -39,11 +39,11 @@ test("removeEdge", () => {
 test("getEdges", () => {
     const graph = testGraphSequenceExecuteNothing();
 
-    expect(graph.getEdges().length).toBe(3);
+    expect(graph.getAllEdges().length).toBe(3);
 
     const clone = graph.clone();
 
-    expect(clone.getEdges().length).toBe(3);
+    expect(clone.getAllEdges().length).toBe(3);
 });
 
 test("getEdgesAfterRemoveNode", () => {
@@ -51,5 +51,5 @@ test("getEdgesAfterRemoveNode", () => {
 
     graph.removeNodeById("Add")
 
-    expect(graph.getEdges().length).toBe(0);
+    expect(graph.getAllEdges().length).toBe(0);
 });

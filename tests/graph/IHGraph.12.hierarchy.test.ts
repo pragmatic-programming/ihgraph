@@ -36,13 +36,13 @@ test("createTHGraphHierarchy", () => {
 
     expect(thGraph.getNodes().length).toBe(1);
     expect(thGraph.getEdgeTypes().length).toBe(0);
-    expect(thGraph.getEdges().length).toBe(0);
+    expect(thGraph.getAllEdges().length).toBe(0);
     expect(thGraph.getNodes()[0]).toBeInstanceOf(IHGraph);
 
     const nestedGraph = thGraph.getNodes()[0] as IHGraph;
-    expect(nestedGraph.getEdges()[0].getSourceNode()).toBe(nestedGraph.getNodes()[0]);
-    expect(nestedGraph.getEdges()[0].getTargetNode()).toBe(nestedGraph.getNodes()[1]);
-    expect(nestedGraph.getEdges()[0].getType()).toBe(nestedGraph.getEdgeTypes()[0]);
+    expect(nestedGraph.getAllEdges()[0].getSourceNode()).toBe(nestedGraph.getNodes()[0]);
+    expect(nestedGraph.getAllEdges()[0].getTargetNode()).toBe(nestedGraph.getNodes()[1]);
+    expect(nestedGraph.getAllEdges()[0].getType()).toBe(nestedGraph.getEdgeTypes()[0]);
     expect(nestedGraph.getNodes()[0].getParent()).toBe(nestedGraph);
     expect(nestedGraph.getNodes()[1].getParent()).toBe(nestedGraph);
     expect(nestedGraph.getEdgeTypes()[0].getPriority()).toBe(26);
@@ -79,7 +79,7 @@ test("checkTHGraphHierarchyCloneSizes", () => {
     expect(nestedGraph).toBeInstanceOf(IHGraph);
     expect(nestedGraph.getNodes().length).toBe(2);
     expect(nestedGraph.getEdgeTypes().length).toBe(1);
-    expect(nestedGraph.getEdges().length).toBe(1);
+    expect(nestedGraph.getAllEdges().length).toBe(1);
 });
     
 test("checkTHGraphSimpleCloneReferences", () => {
@@ -101,8 +101,8 @@ test("checkTHGraphSimpleCloneReferences", () => {
     thGraph.getEdgeTypes().forEach((type, index) => {
         expect(type).not.toBe(clone.getEdgeTypes()[index]);
     });
-    thGraph.getEdges().forEach((edge, index) => {
-        expect(edge).not.toBe(clone.getEdges()[index]);
+    thGraph.getAllEdges().forEach((edge, index) => {
+        expect(edge).not.toBe(clone.getAllEdges()[index]);
     });
     nestedGraph.getNodes().forEach((node, index) => {
         expect(node).not.toBe(nestedCloneGraph.getNodes()[index]);
@@ -110,8 +110,8 @@ test("checkTHGraphSimpleCloneReferences", () => {
     nestedGraph.getEdgeTypes().forEach((type, index) => {
         expect(type).not.toBe(nestedCloneGraph.getEdgeTypes()[index]);
     });
-    nestedGraph.getEdges().forEach((edge, index) => {
-        expect(edge).not.toBe(nestedCloneGraph.getEdges()[index]);
+    nestedGraph.getAllEdges().forEach((edge, index) => {
+        expect(edge).not.toBe(nestedCloneGraph.getAllEdges()[index]);
     });
 });
     
@@ -139,10 +139,10 @@ test("checkTHGraphSimpleCloneComplete", () => {
         expect(mappedType).toBeDefined();
         expect(mappedType).toBe(clone.getEdgeTypes()[index]);
     });
-    thGraph.getEdges().forEach((edge, index) => {
+    thGraph.getAllEdges().forEach((edge, index) => {
         const mappedEdge = edgeMapping.get(edge);
         expect(mappedEdge).toBeDefined();
-        expect(mappedEdge).toBe(clone.getEdges()[index]);
+        expect(mappedEdge).toBe(clone.getAllEdges()[index]);
         expect(nodeMapping.get(edge.getSourceNode())).toBe(mappedEdge!.getSourceNode());
         expect(nodeMapping.get(edge.getTargetNode())).toBe(mappedEdge!.getTargetNode());
         expect(typeMapping.get(edge.getType())).toBe(mappedEdge!.getType());
@@ -158,10 +158,10 @@ test("checkTHGraphSimpleCloneComplete", () => {
         expect(mappedType).toBeDefined();
         expect(mappedType).toBe(nestedCloneGraph.getEdgeTypes()[index]);
     });
-    nestedGraph.getEdges().forEach((edge, index) => {
+    nestedGraph.getAllEdges().forEach((edge, index) => {
         const mappedEdge = edgeMapping.get(edge);
         expect(mappedEdge).toBeDefined();
-        expect(mappedEdge).toBe(nestedCloneGraph.getEdges()[index]);
+        expect(mappedEdge).toBe(nestedCloneGraph.getAllEdges()[index]);
         expect(nodeMapping.get(edge.getSourceNode())).toBe(mappedEdge!.getSourceNode());
         expect(nodeMapping.get(edge.getTargetNode())).toBe(mappedEdge!.getTargetNode());
         expect(typeMapping.get(edge.getType())).toBe(mappedEdge!.getType());

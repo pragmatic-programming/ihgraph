@@ -107,6 +107,10 @@ export class SimpleNode extends NamedElement implements EdgeReceiver {
         return this.outgoingEdges;
     }
 
+    public getEdges(): TransformationEdge[] {
+        return this.incomingEdges.concat(this.outgoingEdges);
+    }
+
     public addIncomingEdge(edge: TransformationEdge): void {
         this.incomingEdges.push(edge);
     }

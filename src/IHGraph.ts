@@ -233,7 +233,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns The source node of the edge with the highest edge priority.
      */
     public getHighestPriorityShallowNode(): IHNode {
-        const edges = this.getEdges();
+        const edges = this.getAllEdges();
 
         if (edges.length < 1) {
             throw Error("There are no transformation edges!");
@@ -307,6 +307,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         return [...this.outgoingEdges];
     }
 
+    public getEdges(): TransformationEdge[] {
+        return this.incomingEdges.concat(this.outgoingEdges);
+    }
+
     /**
      * Adds an incoming edge to the node. Implements part of the EdgeReceiver interface.
      * @param edge The incoming edge.
@@ -350,7 +354,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Retrieves all edges of the graph.
      * @returns A list of transformation edges of the graph.
      */
-    public getEdges(): TransformationEdge[] {
+    public getAllEdges(): TransformationEdge[] {
         const edges = new Set<TransformationEdge>();
         this.getNodes().forEach((node) => {
             node.getIncomingEdges().forEach((val) => edges.add(val));
@@ -379,7 +383,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
     public getDeepEdges(): TransformationEdge[] {
         const graphNodes = this.getGraphNodes();
         const graphEdges = graphNodes.map((val) => val.getDeepEdges()).reduce((prev, curr) => prev.concat(curr), []);
-        return this.getEdges().concat(graphEdges);
+        return this.getAllEdges().concat(graphEdges);
     }
 
     /**
@@ -399,7 +403,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         const sourceNodeId = edge.getSourceNode().getId();
         const targetNodeId = edge.getTargetNode().getId();
         const edgeTypeId = edge.getType().getId();
-        const edgesToRemove = this.getEdges().filter((edge) => 
+        const edgesToRemove = this.getAllEdges().filter((edge) => 
             edge.getSourceNode().getId() === sourceNodeId && 
             edge.getTargetNode().getId() === targetNodeId && 
             edge.getType().getId() === edgeTypeId);
@@ -490,7 +494,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * @returns The highest priority of the shallow edges of the graph.
      */
     public getHighestShallowPriority(): number {
-        const edges = this.getEdges();
+        const edges = this.getAllEdges();
 
         if (edges.length < 1) {
             throw Error("There are no transformation edges!");
@@ -529,7 +533,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Removes unused edges types from and adds missing edge types to the graph.
      */
     public revalidateEdgeTypes(): void {
-        const edges = this.getEdges();
+        const edges = this.getAllEdges();
         const edgeTypes = this.getEdgeTypes();
 
         for (const edgeType of edgeTypes) {
@@ -634,7 +638,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
     public addClique(clique: IHGraph): void {
         // Add all nodes and edges from the clique to the graph
         const cliqueNodes = clique.getNodes();
-        const cliqueEdges = clique.getEdges();
+        const cliqueEdges = clique.getAllEdges();
 
         cliqueNodes.forEach((val) => {
             this.addNode(val);
@@ -675,10 +679,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
     public replaceClique(clique: IHGraph, replacement: IHGraph, addCliqueNodes: boolean = true): [TransformationEdge[], TransformationEdge[]] {
         const cliqueNodesIds = clique.getNodes().map((val) => val.getId());
 
-        const externalSourceEdges = this.getEdges().filter((val) => 
+        const externalSourceEdges = this.getAllEdges().filter((val) => 
             !cliqueNodesIds.includes(val.getSourceNode().getId()) && 
             cliqueNodesIds.includes(val.getTargetNode().getId()));
-        const externalTargetEdges = this.getEdges().filter((val) =>
+        const externalTargetEdges = this.getAllEdges().filter((val) =>
             !cliqueNodesIds.includes(val.getTargetNode().getId()) && 
             cliqueNodesIds.includes(val.getSourceNode().getId()));
 
@@ -733,7 +737,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
     public removeClique(clique: IHGraph): void {
         // Remove all nodes and edges from the graph that are in the clique
         const cliqueNodes = clique.getNodes();
-        const cliqueEdges = clique.getEdges();
+        const cliqueEdges = clique.getAllEdges();
 
         cliqueEdges.forEach((val) => {
             this.removeEdgeBySourceTargetIds(val);
@@ -774,7 +778,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         let graph = this.clone();
 
         // If there are less than two edge types left, there is no need to induce a new hierarchy.
-        const edgeTypes = new Set(graph.getEdges().map((val) => val.getType()));
+        const edgeTypes = new Set(graph.getAllEdges().map((val) => val.getType()));
         if (edgeTypes.size < 2) {
             return graph;
         }
@@ -1150,7 +1154,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
             factoryObject.edgeTypes.push(edgeTypeObject);
         }
 
-        for (const edge of this.getEdges()) {
+        for (const edge of this.getAllEdges()) {
             const edgeObject: EdgeFactoryClass = new EdgeFactoryClass(edge.getType().getId(), nodeMapping.get(edge.getSourceNode())!, nodeMapping.get(edge.getTargetNode())!);
             if (includeAnnotations) {
                 edge.cloneAnnotationsTo(edgeObject);
@@ -1171,7 +1175,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         const nodes = this.getNodes();
         const sourceNodes = this.getSimpleNodes();
         const graphNodes = this.getGraphNodes();
-        const edges = this.getEdges();
+        const edges = this.getAllEdges();
         const incomingEdges = this.getIncomingEdges();
         const outgoingEdges = this.getOutgoingEdges();
 
@@ -1216,7 +1220,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      */
     public consistency(): boolean {
         const nodes = this.getNodes();
-        const edges = this.getEdges();
+        const edges = this.getAllEdges();
         const edgeTypes = this.getEdgeTypes();
 
         for (const node of nodes) {

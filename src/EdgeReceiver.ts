@@ -19,6 +19,7 @@ import { TransformationEdge } from "./TransformationEdge";
 export interface EdgeReceiver {
     getOutgoingEdges(): TransformationEdge[];
     getIncomingEdges(): TransformationEdge[];
+    getEdges(): TransformationEdge[];
     addOutgoingEdge(edge: TransformationEdge): void;
     addIncomingEdge(edge: TransformationEdge): void;
     removeIncomingEdge(edge: TransformationEdge): void;

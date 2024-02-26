@@ -23,17 +23,17 @@ test("createTHGraphDemo01Create", () => {
     // then
     expect(thGraph.getNodes().length).toBe(3);
     expect(thGraph.getEdgeTypes().length).toBe(1);
-    expect(thGraph.getEdges().length).toBe(2);
+    expect(thGraph.getAllEdges().length).toBe(2);
     expect(thGraph.getNodeById("Defines")).toBe(thGraph.getNodes()[0]);
     expect(thGraph.getNodeById("Setup")).toBe(thGraph.getNodes()[1]);
     expect(thGraph.getNodeById("Loop")).toBe(thGraph.getNodes()[2]);
     expect(thGraph.getEdgeTypeById("Sequence")).toBe(thGraph.getEdgeTypes()[0]);
-    expect(thGraph.getEdges()[0].getSourceNode()).toBe(thGraph.getNodes()[0]);
-    expect(thGraph.getEdges()[0].getTargetNode()).toBe(thGraph.getNodes()[1]);
-    expect(thGraph.getEdges()[0].getType()).toBe(thGraph.getEdgeTypes()[0]);
-    expect(thGraph.getEdges()[1].getSourceNode()).toBe(thGraph.getNodes()[1]);
-    expect(thGraph.getEdges()[1].getTargetNode()).toBe(thGraph.getNodes()[2]);
-    expect(thGraph.getEdges()[1].getType()).toBe(thGraph.getEdgeTypes()[0]);
+    expect(thGraph.getAllEdges()[0].getSourceNode()).toBe(thGraph.getNodes()[0]);
+    expect(thGraph.getAllEdges()[0].getTargetNode()).toBe(thGraph.getNodes()[1]);
+    expect(thGraph.getAllEdges()[0].getType()).toBe(thGraph.getEdgeTypes()[0]);
+    expect(thGraph.getAllEdges()[1].getSourceNode()).toBe(thGraph.getNodes()[1]);
+    expect(thGraph.getAllEdges()[1].getTargetNode()).toBe(thGraph.getNodes()[2]);
+    expect(thGraph.getAllEdges()[1].getType()).toBe(thGraph.getEdgeTypes()[0]);
     expect(thGraph.getNodes()[0].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[1].getParent()).toBe(thGraph);
     expect(thGraph.getNodes()[2].getParent()).toBe(thGraph);

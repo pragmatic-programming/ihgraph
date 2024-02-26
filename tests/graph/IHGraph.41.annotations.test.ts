@@ -184,7 +184,7 @@ test("createIHGraphAnnotation10SerializationEdge", () => {
 
     expect(graph).toBeDefined();
 
-    const edge = graph.getEdges()[0];
+    const edge = graph.getAllEdges()[0];
 
     edge.createAnnotation("testAnnotationString", "First Annotation");
     edge.createAnnotation("testAnnotationObject", {x: 100, y: 200});
@@ -198,7 +198,7 @@ test("createIHGraphAnnotation10SerializationEdge", () => {
 
     expect(factoryGraph).toBeDefined();
 
-    const factoryEdge = factoryGraph.getEdges()[0];
+    const factoryEdge = factoryGraph.getAllEdges()[0];
 
     expect(factoryEdge).toBeDefined();
     expect(factoryEdge.annotations).toBeDefined();
@@ -272,7 +272,7 @@ test("createIHGraphAnnotation14CloneEdge", () => {
 
     expect(graph).toBeDefined();
 
-    const edge = graph.getEdges()[0];
+    const edge = graph.getAllEdges()[0];
 
     edge.createAnnotation("testAnnotationString", "First Annotation");
     edge.createAnnotation("testAnnotationObject", {x: 100, y: 200});
@@ -281,7 +281,7 @@ test("createIHGraphAnnotation14CloneEdge", () => {
 
     expect(clone).toBeDefined();
 
-    const cloneEdge = clone.getEdges()[0];
+    const cloneEdge = clone.getAllEdges()[0];
 
     expect(cloneEdge).toBeDefined();
     expect(cloneEdge.annotations).toBeDefined();
