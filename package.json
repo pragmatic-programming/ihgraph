@@ -1,6 +1,6 @@
 {
   "name": "@pragmatic-programming/ihgraph",
-  "version": "0.0.1-rc.2",
+  "version": "0.0.1-rc.3",
   "description": "Induced Hierarchy Graph",
   "license": "(EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0)",
   "keywords": [

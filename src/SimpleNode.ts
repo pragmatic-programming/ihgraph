@@ -61,6 +61,10 @@ export class SimpleNode extends NamedElement implements EdgeReceiver {
         return this.parent;
     }
 
+    public setParent(parent: IHGraph): void {
+        this.parent = parent;
+    }
+
     public getId(): string {
         return this.id;
     }

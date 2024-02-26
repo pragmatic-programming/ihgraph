@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-import { testGraphSequenceExecute } from "./TestGraphs";
+import { testGraphSequenceExecute, testGraphSequenceExecuteNothing } from "./TestGraphs";
 
 test("removeEdge", () => {
     const graph = testGraphSequenceExecute();
@@ -31,5 +31,25 @@ test("removeEdge", () => {
     
     const graphClone = graph.clone();
 
+    expect(graphClone.getEdges().length).toBe(1);
+    expect(graphClone.getDeepEdges().length).toBe(1);
     expect(graphClone).toBeDefined();
+});
+
+test("getEdges", () => {
+    const graph = testGraphSequenceExecuteNothing();
+
+    expect(graph.getEdges().length).toBe(3);
+
+    const clone = graph.clone();
+
+    expect(clone.getEdges().length).toBe(3);
+});
+
+test("getEdgesAfterRemoveNode", () => {
+    const graph = testGraphSequenceExecuteNothing();
+
+    graph.removeNodeById("Add")
+
+    expect(graph.getEdges().length).toBe(0);
 });

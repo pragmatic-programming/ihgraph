@@ -17,7 +17,6 @@
 import { Annotatable } from "./Annotatable";
 import { EdgeType } from "./EdgeType";
 import { IHNode } from "./IHGraph";
-import { EdgeReceiver } from "./EdgeReceiver";
 
 export class TransformationEdge extends Annotatable {
     protected sourceNode: IHNode;
@@ -53,7 +52,7 @@ export class TransformationEdge extends Annotatable {
         return this.targetNode;
     }
 
-    public getType(): EdgeType {    
+    public getType(): EdgeType {
         if (this.type === undefined) {
             throw new Error("You cannot retrieve an undefined type.");
         }
@@ -61,11 +60,21 @@ export class TransformationEdge extends Annotatable {
     }
 
     public setSourceNode(sourceNode: IHNode): void {
+        if (this.sourceNode !== sourceNode && this.sourceNode !== undefined) {
+            if (this.sourceNode.getOutgoingEdges().includes(this)) {
+                this.sourceNode.removeOutgoingEdge(this);
+            }
+        }
         this.sourceNode = sourceNode;
         sourceNode.addOutgoingEdge(this);
     }
 
     public setTargetNode(targetNode: IHNode): void {
+        if (this.targetNode !== targetNode && this.targetNode !== undefined) {
+            if ( this.targetNode.getIncomingEdges().includes(this)) {
+                this.targetNode.removeIncomingEdge(this);
+            }
+        }
         this.targetNode = targetNode;
         targetNode.addIncomingEdge(this);
     }

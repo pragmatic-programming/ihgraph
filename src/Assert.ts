@@ -14,32 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  ********************************************************************************/
 
-export class Hashable {
-    protected static objectIdMap = new WeakMap<Hashable, string>();
-    protected static objectCount = 0x100 // ORG 100h;
-
-    protected _objectId: string;
-
-    constructor() {
-        this._objectId = this.getHashCode();
+export class AssertionError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "AssertionError";
     }
+}
 
-    hashCode(): number {
-        if (!Hashable.objectIdMap.has(this)) {
-            Hashable.objectIdMap.set(this, `${++Hashable.objectCount}`);
-        }
-
-        let h: number = 0;
-        let s: string = Hashable.objectIdMap.get(this)!;
-
-        for (let i = 0; i < s.length; i++) {
-            h = 31 * h + s.charCodeAt(i);
-        }
-
-        return h & 0xFFFFFFFF
-    }
-
-    getHashCode(): string {
-        return `0x${this.hashCode().toString(16).padStart(8, '0')}`;
+export function assert(condition: boolean, message: string | undefined = undefined): void {
+    if (!condition) {
+        throw new AssertionError(message !== undefined ? message : "Assertion failed!");
     }
 }
