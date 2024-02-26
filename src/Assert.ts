@@ -23,6 +23,6 @@ export class AssertionError extends Error {
 
 export function assert(condition: boolean, message: string | undefined = undefined): void {
     if (!condition) {
-        throw new AssertionError(message !== undefined ? message : "Assertion failed");
+        throw new AssertionError(message !== undefined ? message : "Assertion failed!");
     }
 }
