@@ -55,8 +55,8 @@ test("checkTHGraphSimpleCloneComplete", () => {
     // when
     const clone = thGraph.clone();
 
-    const cloneNode1 = clone.getNodeById("Node1");
-    const cloneNode2 = clone.getNodeById("Node2");
+    const cloneNode1 = clone.getNodeByName("Node1");
+    const cloneNode2 = clone.getNodeByName("Node2");
     
     // then
     expect(cloneNode1).toBeDefined();

@@ -24,9 +24,9 @@ test("createTHGraphDemo01Create", () => {
     expect(thGraph.getNodes().length).toBe(3);
     expect(thGraph.getEdgeTypes().length).toBe(1);
     expect(thGraph.getAllEdges().length).toBe(2);
-    expect(thGraph.getNodeById("Defines")).toBe(thGraph.getNodes()[0]);
-    expect(thGraph.getNodeById("Setup")).toBe(thGraph.getNodes()[1]);
-    expect(thGraph.getNodeById("Loop")).toBe(thGraph.getNodes()[2]);
+    expect(thGraph.getNodeByName("Defines")).toBe(thGraph.getNodes()[0]);
+    expect(thGraph.getNodeByName("Setup")).toBe(thGraph.getNodes()[1]);
+    expect(thGraph.getNodeByName("Loop")).toBe(thGraph.getNodes()[2]);
     expect(thGraph.getEdgeTypeById("Sequence")).toBe(thGraph.getEdgeTypes()[0]);
     expect(thGraph.getAllEdges()[0].getSourceNode()).toBe(thGraph.getNodes()[0]);
     expect(thGraph.getAllEdges()[0].getTargetNode()).toBe(thGraph.getNodes()[1]);

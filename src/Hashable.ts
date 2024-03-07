@@ -19,12 +19,14 @@ export class Hashable {
     protected static objectCount = 0x100 // ORG 100h;
 
     protected _objectId: string;
+    protected _hashCode: number;
 
     constructor() {
-        this._objectId = this.getHashCode();
+        this._hashCode = this.generateHashCode();
+        this._objectId = `0x${this.hashCode().toString(16).padStart(8, '0')}`;
     }
 
-    hashCode(): number {
+    protected generateHashCode(): number {
         if (!Hashable.objectIdMap.has(this)) {
             Hashable.objectIdMap.set(this, `${++Hashable.objectCount}`);
         }
@@ -36,10 +38,18 @@ export class Hashable {
             h = 31 * h + s.charCodeAt(i);
         }
 
-        return h & 0xFFFFFFFF
+        return h & 0xFFFFFFFF;
+    }
+
+    hashCode(): number {
+        return this._hashCode;
     }
 
     getHashCode(): string {
-        return `0x${this.hashCode().toString(16).padStart(8, '0')}`;
+        return this._objectId;
+    }
+
+    public equals(other: Hashable): boolean {
+        return this.hashCode() === other.hashCode();
     }
 }

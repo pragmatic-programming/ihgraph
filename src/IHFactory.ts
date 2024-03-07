@@ -127,13 +127,13 @@ export function createIHGraphFromJSONString(json: string) {
 
     // create edges
     for (const edge of parsedJSON.edges) {
-        const sourceNode = ihGraph.getNodeById(edge.sourceNode);
+        const sourceNode = ihGraph.getNodeByName(edge.sourceNode);
         
         if (!sourceNode) {
             throw new Error(`Source node with id ${edge.sourceNode} does not exist.`);
         }
 
-        const targetNode = ihGraph.getNodeById(edge.targetNode);
+        const targetNode = ihGraph.getNodeByName(edge.targetNode);
 
         if (!targetNode) {
             throw new Error(`Target node with id ${edge.targetNode} does not exist.`);

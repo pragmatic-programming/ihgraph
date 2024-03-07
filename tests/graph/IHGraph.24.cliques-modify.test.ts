@@ -63,10 +63,10 @@ function testGraphClique4(): IHGraph {
 test("removeClique", () => {
     const graph = testGraphClique();
 
-    const node1 = graph.getNodeById("Node1");
+    const node1 = graph.getNodeByName("Node1");
     const type1 = graph.getEdgeTypeById("Type1");
-    const node2 = graph.getNodeById("Node2");
-    const node3 = graph.getNodeById("Node3");
+    const node2 = graph.getNodeByName("Node2");
+    const node3 = graph.getNodeByName("Node3");
     const type2 = graph.getEdgeTypeById("Type2");
 
     expect(node1).toBeDefined();
@@ -155,6 +155,6 @@ test("replaceClique", () => {
     expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node1");
     expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node8");
 
-    expect(graph.getSimpleNodeEdges()[0].getSourceNode().getId()).toBe("Node1");
-    expect(graph.getSimpleNodeEdges()[0].getTargetNode().getId()).toBe("Node8");
+    expect(graph.getSimpleNodeEdges()[0].getSourceNode().getName()).toBe("Node1");
+    expect(graph.getSimpleNodeEdges()[0].getTargetNode().getName()).toBe("Node8");
 });

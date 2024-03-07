@@ -70,10 +70,55 @@ test("inducedHierarchyDepth2", () => {
 
     expect(nestedGraphNodes.length).toBe(1);
 
-    const defineNode = inducedHierarchyGraph.getNodeById("Define");
-    const addNode = inducedHierarchyGraph.getNodeById("Add");
-    const resultNode = inducedHierarchyGraph.getNodeById("Result");
-    const nothingNode = inducedHierarchyGraph.getNodeById("Nothing");
+    const defineNode = inducedHierarchyGraph.getNodeByName("Define");
+    const addNode = inducedHierarchyGraph.getNodeByName("Add");
+    const resultNode = inducedHierarchyGraph.getNodeByName("Result");
+    const nothingNode = inducedHierarchyGraph.getNodeByName("Nothing");
+
+    expect(defineNode).toBeDefined();
+    expect(addNode).toBeDefined();
+    expect(resultNode).toBeDefined();
+    expect(nothingNode).toBeDefined();
+
+    expect(defineNode?.getParent()).toBe(nestedGraphNodes[0]);
+    expect(addNode?.getParent()).toBe(nestedGraphNodes[0]);
+    expect(resultNode?.getParent()).toBe(graphNodes[0]);
+    expect(nothingNode?.getParent()).toBe(inducedHierarchyGraph);
+
+    expect(defineNode?.getOutgoingEdges().length).toBe(1);
+    expect(defineNode?.getOutgoingEdges()[0].getTargetNode()).toBe(addNode);
+    expect(addNode?.getOutgoingEdges().length).toBe(0);
+    expect(nestedGraphNodes[0].getOutgoingEdges().length).toBe(1);
+    expect(nestedGraphNodes[0].getOutgoingEdges()[0].getTargetNode()).toBe(resultNode);
+    expect(graphNodes[0].getOutgoingEdges().length).toBe(1);
+    expect(graphNodes[0].getOutgoingEdges()[0].getTargetNode()).toBe(nothingNode);
+    expect(inducedHierarchyGraph.getAllEdges().length).toBe(1);
+})
+
+test("inducedHierarchyDepth3IdClone", () => {
+    const graph = testGraphSequenceExecuteNothing().clone().clone();
+
+    expect(graph).toBeDefined();
+
+    const inducedHierarchyGraph = graph.getInducedHierarchy().clone().getInducedHierarchy();
+
+    expect(inducedHierarchyGraph).toBeDefined();
+    // console.log(inducedHierarchyGraph.toStringDebugGraph());
+
+    const graphNodes = inducedHierarchyGraph.getGraphNodes();
+    const sourceNodes = inducedHierarchyGraph.getSimpleNodes();
+
+    expect(graphNodes.length).toBe(1);
+    expect(sourceNodes.length).toBe(1);
+
+    const nestedGraphNodes = graphNodes[0].getGraphNodes();
+
+    expect(nestedGraphNodes.length).toBe(1);
+
+    const defineNode = inducedHierarchyGraph.getNodeByName("Define");
+    const addNode = inducedHierarchyGraph.getNodeByName("Add");
+    const resultNode = inducedHierarchyGraph.getNodeByName("Result");
+    const nothingNode = inducedHierarchyGraph.getNodeByName("Nothing");
 
     expect(defineNode).toBeDefined();
     expect(addNode).toBeDefined();

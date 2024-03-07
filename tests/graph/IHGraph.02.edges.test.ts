@@ -49,7 +49,7 @@ test("getEdges", () => {
 test("getEdgesAfterRemoveNode", () => {
     const graph = testGraphSequenceExecuteNothing();
 
-    graph.removeNodeById("Add")
+    graph.removeNodeByName("Add")
 
     expect(graph.getAllEdges().length).toBe(0);
 });
