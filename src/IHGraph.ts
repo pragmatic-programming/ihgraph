@@ -1218,7 +1218,7 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
      * Mainly used in internal operations and debugging.
      * @returns true if everything is consistent.
      */
-    public consistency(): boolean {
+    public consistency(idCacheNodes: Set<string> = new Set<string>(), idCacheTypes: Set<string> = new Set<string>()): boolean {
         const nodes = this.getNodes();
         const edges = this.getAllEdges();
         const edgeTypes = this.getEdgeTypes();
@@ -1240,6 +1240,10 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
                     throw new ConsistencyError(`An incoming edge of the node ${node.getIdHashCode()} is not included in the graph!`)
                 }
             }
+            if (idCacheNodes.has(node.getId())) {
+                throw new ConsistencyError(`The node id ${node.getIdHashCode()} is not unique!`)
+            }
+            idCacheNodes.add(node.getId());
         }
 
         for (const edge of edges) {
@@ -1264,6 +1268,16 @@ export class IHGraph extends NamedElement implements EdgeReceiver, KicoCloneable
         for (const edgeType of edgeTypes) {
             if (!edges.some((edge) => edge.getType() === edgeType)) {
                 throw new ConsistencyError(`The edge type ${edgeType.getIdHashCode()} is not used by any edge!`)
+            }
+            if (idCacheTypes.has(edgeType.getId())) {
+                throw new ConsistencyError(`The edge type id ${edgeType.getIdHashCode()} is not unique!`)
+            }
+            idCacheTypes.add(edgeType.getId());
+        }
+
+        for (const node of nodes.filter((val) => val instanceof IHGraph)) {
+            if (!(node as IHGraph).consistency(idCacheNodes, idCacheTypes)) {
+                return false;
             }
         }
  

@@ -55,6 +55,7 @@ export class NamedElement extends Annotatable {
     public cloneTo(target: NamedElement): void {
         super.cloneTo(target);
         target.id = this.id;
+        target.calculateUID();
     }
 
     public equals(other: NamedElement): boolean {
