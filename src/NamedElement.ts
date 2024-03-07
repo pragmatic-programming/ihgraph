@@ -17,11 +17,19 @@
 import { Annotatable } from "./Annotatable";
 
 export class NamedElement extends Annotatable {
-    protected id: string;
+    protected id: string = "";
     protected _uid: string = "";
 
     constructor(id: string = "") {
         super();
+        this.setId(id);
+    }
+
+    getId(): string {
+        return this.id;
+    }
+    
+    setId(id: string): void {
         if (id == "") {
             this.id = "id" + this.hashCode();
         } else {
@@ -30,12 +38,8 @@ export class NamedElement extends Annotatable {
         this.calculateUID();
     }
 
-    getId(): string {
-        return this.id;
-    }
-    
-    setId(id: string): void {
-        this.id = id;
+    protected clearId(): void {
+        this.id = "";
         this.calculateUID();
     }
     
