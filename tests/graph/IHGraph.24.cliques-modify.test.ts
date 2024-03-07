@@ -64,10 +64,10 @@ test("removeClique", () => {
     const graph = testGraphClique();
 
     const node1 = graph.getNodeByName("Node1");
-    const type1 = graph.getEdgeTypeById("Type1");
+    const type1 = graph.getEdgeTypeByName("Type1");
     const node2 = graph.getNodeByName("Node2");
     const node3 = graph.getNodeByName("Node3");
-    const type2 = graph.getEdgeTypeById("Type2");
+    const type2 = graph.getEdgeTypeByName("Type2");
 
     expect(node1).toBeDefined();
     expect(node2).toBeDefined();
@@ -107,15 +107,15 @@ test("addClique", () => {
     expect(graph.getDeepEdges().length).toBe(3);
     expect(graph.getEdgeTypes().length).toBe(3);
 
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node1");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node2");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node3");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node4");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node5");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node1");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node2");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node3");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node4");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node5");
 
-    expect(graph.getEdgeTypes().map(type => type.getId())).toContain("Type1");
-    expect(graph.getEdgeTypes().map(type => type.getId())).toContain("Type2");
-    expect(graph.getEdgeTypes().map(type => type.getId())).toContain("Type3");
+    expect(graph.getEdgeTypes().map(type => type.getName())).toContain("Type1");
+    expect(graph.getEdgeTypes().map(type => type.getName())).toContain("Type2");
+    expect(graph.getEdgeTypes().map(type => type.getName())).toContain("Type3");
 });
 
 test("addClique2", () => {
@@ -128,14 +128,14 @@ test("addClique2", () => {
     expect(graph.getDeepEdges().length).toBe(3);
     expect(graph.getEdgeTypes().length).toBe(2);
 
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node1");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node2");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node3");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node6");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node7");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node1");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node2");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node3");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node6");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node7");
 
-    expect(graph.getEdgeTypes().map(type => type.getId())).toContain("Type1");
-    expect(graph.getEdgeTypes().map(type => type.getId())).toContain("Type2");
+    expect(graph.getEdgeTypes().map(type => type.getName())).toContain("Type1");
+    expect(graph.getEdgeTypes().map(type => type.getName())).toContain("Type2");
 });
 
 test("replaceClique", () => {
@@ -152,8 +152,8 @@ test("replaceClique", () => {
     expect(graph.getDeepNodes().length).toBe(2);
     expect(graph.getDeepEdges().length).toBe(1);
 
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node1");
-    expect(graph.getSimpleNodes().map(node => node.getId())).toContain("Node8");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node1");
+    expect(graph.getSimpleNodes().map(node => node.getName())).toContain("Node8");
 
     expect(graph.getSimpleNodeEdges()[0].getSourceNode().getName()).toBe("Node1");
     expect(graph.getSimpleNodeEdges()[0].getTargetNode().getName()).toBe("Node8");

@@ -35,7 +35,7 @@ export class TransformationConfiguration extends Map<EdgeType, typeof Transforma
 
     public get(edgeType: EdgeType): typeof TransformationProcessor | undefined {
         for (const [key, value] of this.entries()) {
-            if (key.getId() === edgeType.getId()) {
+            if (key.getName() === edgeType.getName()) {
                 return value;
             }
         }

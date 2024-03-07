@@ -4,7 +4,7 @@ export function WYTIWYGSumExecute(): IHGraphFactoryInterface {
     return {        
         nodes: [
             {
-                id: "Function",
+                name: "Function",
                 content:
 `function sum(n) {
     if (n > 0) {
@@ -15,42 +15,42 @@ export function WYTIWYGSumExecute(): IHGraphFactoryInterface {
 }`
             },
             {
-                id: "Test 1",
+                name: "Test 1",
                 content: "sum(3) == 6"
             },
             {
-                id: "Test 2",
+                name: "Test 2",
                 content: "sum(1)"
             },
             {
-                id: "Test 3",
+                name: "Test 3",
                 content: "sum(-1) == -1"
             },
             {
-                id: "Usage",
+                name: "Usage",
                 content: 
 `
 sum(3) + sun(1);
 `                
             },
             {
-                id: "Result",
+                name: "Result",
                 content: ""
             }
         ],
         edgeTypes: [
             {
-                id: "test",
+                name: "test",
                 priority: 0,
                 immediate: true
             },
             {
-                id: "sequence",
+                name: "sequence",
                 priority: 2,
                 immediate: false
             },
             {
-                id: "execute",
+                name: "execute",
                 priority: 1,
                 immediate: false
             }

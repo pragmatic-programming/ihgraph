@@ -36,9 +36,9 @@ test("inducedHierarchyDepth1", () => {
 
     expect(graphNodeSourceNodes.length).toBe(2);
 
-    const defineNode = graphNodeSourceNodes.find(node => node.getId() === "Define");
-    const addNode = graphNodeSourceNodes.find(node => node.getId() === "Add");
-    const resultNode = sourceNodes.find(node => node.getId() === "Result");
+    const defineNode = graphNodeSourceNodes.find(node => node.getName() === "Define");
+    const addNode = graphNodeSourceNodes.find(node => node.getName() === "Add");
+    const resultNode = sourceNodes.find(node => node.getName() === "Result");
 
     expect(defineNode).toBeDefined();
     expect(addNode).toBeDefined();

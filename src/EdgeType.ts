@@ -25,20 +25,18 @@ export enum TransformationDirection {
 }
 
 export class EdgeType extends NamedElement {
-    id: string;
     priority: number;
     immediate: boolean;
     transformationDirection: TransformationDirection = TransformationDirection.CONTROLFLOW;
 
-    constructor(id: string, priority: number = 0) {
-        super(id);
-        this.id = id;
+    constructor(name: string, priority: number = 0) {
+        super(name);
         this.priority = priority;
         this.immediate = false;
     }
 
     public clone(): EdgeType {
-        const newType = new EdgeType(this.getId()!, this.priority);
+        const newType = new EdgeType(this.getName(), this.priority);
         newType.setImmediate(this.immediate);
         newType.setTransformationDirection(this.transformationDirection);
         this.cloneAnnotationsTo(newType);
@@ -49,10 +47,6 @@ export class EdgeType extends NamedElement {
         return super.equals(other) &&
             this.getPriority() === other.getPriority() &&
             this.isImmediate() === other.isImmediate();
-    }
-    
-    getId(): string {
-        return this.id!;
     }
     
     public getPriority(): number {

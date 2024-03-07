@@ -40,13 +40,13 @@ test("getImmediateCliqueMixed", () => {
 
     expect(immediateClique).toBeDefined();
     expect(immediateClique.length).toBe(1);
-    expect(immediateClique[0].getAllEdges()[0].getType().id).toBe("Diagram");
+    expect(immediateClique[0].getAllEdges()[0].getType().getName()).toBe("Diagram");
 
     const nextClique = graph.getNextClique();
 
     expect(nextClique).toBeDefined();
     expect(nextClique.getNodes().length).toBe(2);
-    expect(nextClique.getAllEdges()[0].getType().id).toBe("SCCharts");
+    expect(nextClique.getAllEdges()[0].getType().getName()).toBe("SCCharts");
 })
 
 test("getImmediateCliqueMultipleEdges", () => {

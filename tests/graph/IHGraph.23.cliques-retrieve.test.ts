@@ -45,7 +45,7 @@ test("getClique", () => {
     const graph = testGraphClique();
 
     const node1 = graph.getNodeByName("Node1");
-    const type1 = graph.getEdgeTypeById("Type1");
+    const type1 = graph.getEdgeTypeByName("Type1");
 
     expect(node1).toBeDefined();
     expect(type1).toBeDefined();
@@ -59,7 +59,7 @@ test("getClique", () => {
 
     const node2 = graph.getNodeByName("Node2");
     const node3 = graph.getNodeByName("Node3");
-    const type2 = graph.getEdgeTypeById("Type2");
+    const type2 = graph.getEdgeTypeByName("Type2");
  
     expect(node2).toBeDefined();
     expect(node3).toBeDefined();
@@ -82,7 +82,7 @@ test("getNextClique", () => {
 
     const node2 = graph.getNodeByName("Node2");
     const node3 = graph.getNodeByName("Node3");
-    const type2 = graph.getEdgeTypeById("Type2");
+    const type2 = graph.getEdgeTypeByName("Type2");
  
     expect(node2).toBeDefined();
     expect(node3).toBeDefined();

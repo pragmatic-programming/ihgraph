@@ -4,7 +4,7 @@ export function SCCharts(): IHGraphFactoryInterface {
     return {        
         nodes: [
             {
-                id: "Abro",
+                name: "Abro",
                 content: `
 scchart ABRO {
     input bool A, B, R
@@ -36,13 +36,13 @@ scchart ABRO {
 }`
             },
             {
-                id: "Diagram",
+                name: "Diagram",
                 content: ""
             }
         ],
         edgeTypes: [
             {
-                id: "Diagram",
+                name: "Diagram",
                 priority: 0,
                 immediate: true
             }
