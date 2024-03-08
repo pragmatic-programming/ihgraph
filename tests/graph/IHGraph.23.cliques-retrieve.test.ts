@@ -44,8 +44,8 @@ function testGraphClique2(): IHGraph {
 test("getClique", () => {
     const graph = testGraphClique();
 
-    const node1 = graph.getNodeById("Node1");
-    const type1 = graph.getEdgeTypeById("Type1");
+    const node1 = graph.getNodeByName("Node1");
+    const type1 = graph.getEdgeTypeByName("Type1");
 
     expect(node1).toBeDefined();
     expect(type1).toBeDefined();
@@ -57,9 +57,9 @@ test("getClique", () => {
     expect(clique!.getDeepEdges().length).toBe(1);
     expect(clique!.getEdgeTypes().length).toBe(1);
 
-    const node2 = graph.getNodeById("Node2");
-    const node3 = graph.getNodeById("Node3");
-    const type2 = graph.getEdgeTypeById("Type2");
+    const node2 = graph.getNodeByName("Node2");
+    const node3 = graph.getNodeByName("Node3");
+    const type2 = graph.getEdgeTypeByName("Type2");
  
     expect(node2).toBeDefined();
     expect(node3).toBeDefined();
@@ -73,16 +73,16 @@ test("getClique", () => {
     expect(clique2!.getEdgeTypes().length).toBe(1);  
     
     expect(clique).not.toBe(clique2);
-    expect(clique2.getNodeById("Node2")).toBeDefined();
-    expect(clique2.getNodeById("Node3")).toBeDefined();
+    expect(clique2.getNodeByName("Node2")).toBeDefined();
+    expect(clique2.getNodeByName("Node3")).toBeDefined();
 })
 
 test("getNextClique", () => {
     const graph = testGraphClique();
 
-    const node2 = graph.getNodeById("Node2");
-    const node3 = graph.getNodeById("Node3");
-    const type2 = graph.getEdgeTypeById("Type2");
+    const node2 = graph.getNodeByName("Node2");
+    const node3 = graph.getNodeByName("Node3");
+    const type2 = graph.getEdgeTypeByName("Type2");
  
     expect(node2).toBeDefined();
     expect(node3).toBeDefined();
@@ -95,8 +95,8 @@ test("getNextClique", () => {
     expect(clique.getDeepEdges().length).toBe(1);
     expect(clique.getEdgeTypes().length).toBe(1);  
     
-    expect(clique.getNodeById("Node2")).toBeDefined();
-    expect(clique.getNodeById("Node3")).toBeDefined();
+    expect(clique.getNodeByName("Node2")).toBeDefined();
+    expect(clique.getNodeByName("Node3")).toBeDefined();
 });
 
 test("equalsClique", () => {

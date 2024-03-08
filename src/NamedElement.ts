@@ -17,30 +17,34 @@
 import { Annotatable } from "./Annotatable";
 
 export class NamedElement extends Annotatable {
-    protected id: string;
+    protected name: string = "";
     protected _uid: string = "";
 
-    constructor(id: string = "") {
+    constructor(name: string = "") {
         super();
-        if (id == "") {
-            this.id = "id" + this.hashCode();
+        this.setName(name);
+    }
+
+    getName(): string {
+        return this.name;
+    }
+    
+    setName(name: string = ""): void {
+        if (name == "") {
+            this.name = "id" + this.hashCode();
         } else {
-            this.id = id;
+            this.name = name;
         }
         this.calculateUID();
     }
 
-    getId(): string {
-        return this.id;
-    }
-    
-    setId(id: string): void {
-        this.id = id;
+    protected clearId(): void {
+        this.name = "";
         this.calculateUID();
     }
     
     protected calculateUID(): string {
-        this._uid = `${this.getId()} (${this.getHashCode()})`
+        this._uid = `${this.getName()} (${this.getHashCode()})`
         return this._uid;
     }
     
@@ -50,14 +54,11 @@ export class NamedElement extends Annotatable {
 
     public cloneTo(target: NamedElement): void {
         super.cloneTo(target);
-        target.id = this.id;
-    }
-
-    public equals(other: NamedElement): boolean {
-        return this.getId() === other.getId();
+        target.name = this.name;
+        target.calculateUID();
     }
 }
 
-export function getIds(elements: NamedElement[]): string[] {
-    return elements.map((val) => val.getId()!).filter((val) => val != undefined) as string[];
+export function getNames(elements: NamedElement[]): string[] {
+    return elements.map((val) => val.getName()!).filter((val) => val != undefined) as string[];
 }

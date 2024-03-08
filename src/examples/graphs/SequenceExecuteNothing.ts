@@ -4,33 +4,33 @@ export function SequenceExecuteNothing(): IHGraphFactoryInterface {
     return {        
         nodes: [
         {
-            id: "Define",
+            name: "Define",
             content: "var x = 1;"
         },
         {
-            id: "Add",
+            name: "Add",
             content: "x + 2"
         },
         {
-            id: "Result",
+            name: "Result",
             content: ""
         },
         {
-            id: "Nothing",
+            name: "Nothing",
             content: ""
         }
         ],
         edgeTypes: [
             {
-                id: "Sequence",
+                name: "Sequence",
                 priority: 8
             },
             {
-                id: "Execute",
+                name: "Execute",
                 priority: 2
             },
             {
-                id: "Nothing",
+                name: "Nothing",
                 priority: 0
             }
         ],

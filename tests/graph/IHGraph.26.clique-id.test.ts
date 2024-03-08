@@ -27,5 +27,5 @@ test("cliqueReplacementWithCorrectIds", () => {
 
     graph.replaceClique(immediateClique, immediateClique);
 
-    expect(graph.getNodeById("Usage")?.getIncomingEdges()[0].getSourceNode().getId()).toBe("Function");
+    expect(graph.getNodeByName("Usage")?.getIncomingEdges()[0].getSourceNode().getName()).toBe("Function");
 })

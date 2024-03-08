@@ -4,18 +4,18 @@ export function Sequence(): IHGraphFactoryInterface {
     return {
         nodes: [
             {
-                id: "Defines"
+                name: "Defines"
             },
             {
-                id: "Setup"
+                name: "Setup"
             },
             {
-                id: "Loop"
+                name: "Loop"
             }
         ],
         edgeTypes: [
             {
-                id: "Sequence",
+                name: "Sequence",
                 priority: 1
             }
         ],

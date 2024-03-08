@@ -4,7 +4,7 @@ export function WYTIWYGSum(): IHGraphFactoryInterface {
     return {        
         nodes: [
             {
-                id: "Function",
+                name: "Function",
                 content: 
 `
 function sum(n: number):number {
@@ -17,21 +17,21 @@ function sum(n: number):number {
 }`
             },
             {
-                id: "Test 1",
+                name: "Test 1",
                 content: "sum(3) == 6"
             },
             {
-                id: "Test 2",
+                name: "Test 2",
                 content: "sum(1)"
             },
             {
-                id: "Test 3",
+                name: "Test 3",
                 content: "sum(-1) == 0"
             }
         ],
         edgeTypes: [
             {
-                id: "wytiwyg",
+                name: "wytiwyg",
                 priority: 0,
                 immediate: true
             }

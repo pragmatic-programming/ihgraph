@@ -34,8 +34,8 @@ test("createTHGraphSimple", () => {
 test("checkTHGraphSimpleNodeById", () => {
     const thGraph = testGraphSimple();
 
-    expect(thGraph.getNodeById("Node1")).toBe(thGraph.getNodes()[0]);
-    expect(thGraph.getNodeById("Node2")).toBe(thGraph.getNodes()[1]);
+    expect(thGraph.getNodeByName("Node1")).toBe(thGraph.getNodes()[0]);
+    expect(thGraph.getNodeByName("Node2")).toBe(thGraph.getNodes()[1]);
 });
 
 test("checkTHGraphSimpleNodeByIdOrder", () => {
@@ -44,16 +44,16 @@ test("checkTHGraphSimpleNodeByIdOrder", () => {
     thGraph.createSimpleNode("Node1");
     thGraph.createSimpleNode("Node1");
 
-    expect(thGraph.getNodeById("Node1")).toBe(thGraph.getNodes()[0]);
-    expect(thGraph.getNodeById("Node1")).not.toBe(thGraph.getNodes()[1]);
-    expect(thGraph.getNodeById("Node1")).not.toBe(thGraph.getNodes()[2]);
+    expect(thGraph.getNodeByName("Node1")).toBe(thGraph.getNodes()[0]);
+    expect(thGraph.getNodeByName("Node1")).not.toBe(thGraph.getNodes()[1]);
+    expect(thGraph.getNodeByName("Node1")).not.toBe(thGraph.getNodes()[2]);
 });
 
 test("checkTHGraphSimplePriority", () => {
     const thGraph = testGraphSimple();
 
-    const node1 = thGraph.getNodeById("Node1");
-    const node2 = thGraph.getNodeById("Node2");
+    const node1 = thGraph.getNodeByName("Node1");
+    const node2 = thGraph.getNodeByName("Node2");
     const type2 = thGraph.createEdgeType("Type2", 2);
     const type32 = thGraph.createEdgeType("Type3", 32);
     expect(node1).toBeDefined();
@@ -70,7 +70,7 @@ test("checkSourceNodes", () => {
     const sourceNodes = graph.getSourceNodes2();
  
     expect(sourceNodes.length).toBe(1);
-    expect(sourceNodes).toContain(graph.getNodeById("Define"));
+    expect(sourceNodes).toContain(graph.getNodeByName("Define"));
 });
 
 test("checkSinkNodes", () => {
@@ -79,14 +79,14 @@ test("checkSinkNodes", () => {
     const sinkNodes = graph.getSinkNodes();
  
     expect(sinkNodes.length).toBe(2);
-    expect(sinkNodes).toContain(graph.getNodeById("Result"));
-    expect(sinkNodes).toContain(graph.getNodeById("Nothing"));
+    expect(sinkNodes).toContain(graph.getNodeByName("Result"));
+    expect(sinkNodes).toContain(graph.getNodeByName("Nothing"));
 });
 
 test("checkNodesContentString", () => {
     const graph = testGraphSequenceExecuteNothing();
 
-    const addNode = graph.getNodeById("Add");
+    const addNode = graph.getNodeByName("Add");
 
     expect(addNode).toBeDefined();
     expect(addNode).toBeInstanceOf(SimpleNode);
@@ -99,7 +99,7 @@ test("checkNodesContentString", () => {
 test("checkNodesContentStringUndefined", () => {
     const graph = testGraphSequenceExecuteNothing();
 
-    const nothingNode = graph.getNodeById("Nothing") as SimpleNode;
+    const nothingNode = graph.getNodeByName("Nothing") as SimpleNode;
 
     expect(nothingNode).toBeDefined();
 

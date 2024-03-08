@@ -30,20 +30,18 @@ export type SimpleNodeContent = undefined | string;
 
 export class SimpleNode extends NamedElement implements EdgeReceiver {
     protected parent : IHGraph;
-    protected id : string;
     protected content : SimpleNodeContent = undefined;
     protected status : SimpleNodeStatus = SimpleNodeStatus.UNDEFINED;
     protected incomingEdges: TransformationEdge[] = [];
     protected outgoingEdges: TransformationEdge[] = [];
 
-    constructor(parent: IHGraph, id : string = "") {
-        super(id);
+    constructor(parent: IHGraph, name : string = "") {
+        super(name);
         this.parent = parent;
-        this.id = id;
     }
 
     public clone(parent: IHGraph | null = null, edgeMapping: Map<TransformationEdge, TransformationEdge> | undefined = undefined): SimpleNode {    
-        const clone = new SimpleNode(parent ? parent : this.parent, this.id);
+        const clone = new SimpleNode(parent ? parent : this.parent, this.getName());
         for (const outgoingEdge of this.outgoingEdges) {
             const edgeClone = outgoingEdge.clone(clone);
             if (edgeMapping !== undefined) {
@@ -63,10 +61,6 @@ export class SimpleNode extends NamedElement implements EdgeReceiver {
 
     public setParent(parent: IHGraph): void {
         this.parent = parent;
-    }
-
-    public getId(): string {
-        return this.id;
     }
 
     public getContent(): SimpleNodeContent {

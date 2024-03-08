@@ -17,20 +17,22 @@
 import { Annotatable } from "./Annotatable";
 import { Annotation } from "./Annotation";
 import { IHGraph } from "./IHGraph";
+import { NamedElement } from "./NamedElement";
 import { SimpleNodeContent } from "./SimpleNode";
 
 export type AnnotationFactoryType = {[key: string]: any};
 
 export interface SourceNodeInterface {
-    id: string
+    name: string
     content?: SimpleNodeContent
     annotations?: AnnotationFactoryType
 }
 
 export interface EdgeTypeInterface {
-    id: string
+    name: string
     priority?: number
     immediate?: boolean
+    annotations?: AnnotationFactoryType
 }
 
 export interface EdgeInterface {
@@ -47,25 +49,21 @@ export interface IHGraphFactoryInterface {
     annotations?: AnnotationFactoryType;
 }
 
-export class SourceNodeFactoryClass extends Annotatable {
-    id: string = "";
+export class SourceNodeFactoryClass extends NamedElement {
     content: SimpleNodeContent = undefined;
 
-    constructor(id: string, content : SimpleNodeContent) {
-        super();
-        this.id = id;
+    constructor(name: string, content : SimpleNodeContent) {
+        super(name);
         this.content = content;
     }
 }
 
-export class EdgeTypeFactoryClass extends Annotatable {
-    id: string = "";
+export class EdgeTypeFactoryClass extends NamedElement {
     priority: number = 0;
     immediate: boolean = false;
 
-    constructor(id: string, priority : number, immediate : boolean) {
-        super();
-        this.id = id;
+    constructor(name: string, priority : number, immediate : boolean) {
+        super(name);
         this.priority = priority;
         this.immediate = immediate;
     }
@@ -91,17 +89,21 @@ export class FactoryObjectClass extends Annotatable {
 
 export function createIHGraphFromJSONString(json: string) {
     const parsedJSON = JSON.parse(json);
+    return createIHGraphFromObject(parsedJSON);
+}
+
+export function createIHGraphFromObject(object: IHGraphFactoryInterface) {
     const ihGraph = new IHGraph();
 
-    if (parsedJSON.annotations) {
-        for (const [id, data] of Object.entries(parsedJSON.annotations)) {
+    if (object.annotations) {
+        for (const [id, data] of Object.entries(object.annotations)) {
             ihGraph.createAnnotation(id, (data as Annotation<any>)["data"]);
         }
     }
 
     // create nodes
-    for (const node of parsedJSON.nodes) {
-        const newNode = ihGraph.createSimpleNode(node.id);
+    for (const node of object.nodes) {
+        const newNode = ihGraph.createSimpleNode(node.name);
         if (node.content) {
             newNode.setContent(node.content);
         }
@@ -113,8 +115,8 @@ export function createIHGraphFromJSONString(json: string) {
     }
 
     // create edge types
-    for (const edgeType of parsedJSON.edgeTypes) {
-        const edgeTypeObject = ihGraph.createEdgeType(edgeType.id, edgeType.priority);
+    for (const edgeType of object.edgeTypes) {
+        const edgeTypeObject = ihGraph.createEdgeType(edgeType.name, edgeType.priority!);
         if (edgeType.immediate) {
             edgeTypeObject.setImmediate(true);
         }
@@ -126,23 +128,23 @@ export function createIHGraphFromJSONString(json: string) {
     }
 
     // create edges
-    for (const edge of parsedJSON.edges) {
-        const sourceNode = ihGraph.getNodeById(edge.sourceNode);
+    for (const edge of object.edges) {
+        const sourceNode = ihGraph.getNodeByName(edge.sourceNode);
         
         if (!sourceNode) {
-            throw new Error(`Source node with id ${edge.sourceNode} does not exist.`);
+            throw new Error(`Source node with name ${edge.sourceNode} does not exist.`);
         }
 
-        const targetNode = ihGraph.getNodeById(edge.targetNode);
+        const targetNode = ihGraph.getNodeByName(edge.targetNode);
 
         if (!targetNode) {
-            throw new Error(`Target node with id ${edge.targetNode} does not exist.`);
+            throw new Error(`Target node with name ${edge.targetNode} does not exist.`);
         }
 
-        const edgeType = ihGraph.getEdgeTypeById(edge.edgeType);
+        const edgeType = ihGraph.getEdgeTypeByName(edge.edgeType);
 
         if (!edgeType) {
-            throw new Error(`Edge type with id ${edge.type} does not exist.`);
+            throw new Error(`Edge type with name ${edge.edgeType} does not exist.`);
         }
 
         const edgeObject = ihGraph.createTransformationEdge(edgeType, sourceNode, targetNode);
